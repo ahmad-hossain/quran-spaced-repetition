@@ -36,10 +36,8 @@ build/**
 import-summary.txt
 
 *.pydevproject
-.project
 .metadata
 .gradle
-build/**
 bin/**
 tmp/**
 tmp/**/*
@@ -47,8 +45,6 @@ tmp/**/*
 *.bak
 *.swp
 *~.nib
-local.properties
-.classpath
 .settings/
 .loadpath
 
