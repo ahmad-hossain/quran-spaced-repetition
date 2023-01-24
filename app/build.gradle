@@ -47,6 +47,13 @@ android {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
         }
     }
+    applicationVariants.all { variant ->
+        kotlin.sourceSets {
+            getByName(variant.name) {
+                kotlin.srcDir("build/generated/ksp/${variant.name}/kotlin")
+            }
+        }
+    }
 }
 
 dependencies {
@@ -73,6 +80,13 @@ dependencies {
     // Hilt
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
+    //Timber Logging
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+
+    //Compose Destinations
+    implementation 'io.github.raamcosta.compose-destinations:core:1.7.17-beta'
+    ksp 'io.github.raamcosta.compose-destinations:ksp:1.7.17-beta'
 }
 
 // Allow references to generated code
