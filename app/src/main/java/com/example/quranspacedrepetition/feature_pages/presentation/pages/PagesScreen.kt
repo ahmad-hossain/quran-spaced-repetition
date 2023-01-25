@@ -1,6 +1,8 @@
 package com.example.quranspacedrepetition.feature_pages.presentation.pages
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.*
@@ -10,6 +12,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.quranspacedrepetition.R
+import com.example.quranspacedrepetition.feature_pages.presentation.components.PageItem
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -22,10 +25,22 @@ fun PagesScreen(
     navigator: DestinationsNavigator,
     viewModel: PagesViewModel = hiltViewModel(),
 ) {
+    val state = viewModel.state
+
     Scaffold(
         topBar = { CenterAlignedTopAppBar(title = { Text(stringResource(R.string.pages)) }) }
     ) { innerPadding ->
-        FilterChipsSection(modifier = Modifier.padding(PaddingValues(top = innerPadding.calculateTopPadding())))
+        Column(Modifier.padding(innerPadding)) {
+            FilterChipsSection()
+
+            Spacer(modifier = Modifier.padding(8.dp))
+
+            LazyColumn {
+                items(state.displayedPages) { page ->
+                    PageItem(page = page)
+                }
+            }
+        }
     }
 }
 

@@ -29,12 +29,14 @@ class PagesViewModel @Inject constructor(
             is PageClicked -> TODO()
             is TodayChipClicked -> {
                 state = state.copy(
+                    displayedPages = state.pagesDueToday,
                     isTodayChipSelected = true,
                     isAllChipSelected = false
                 )
             }
             is AllChipClicked -> {
                 state = state.copy(
+                    displayedPages = state.allPages,
                     isTodayChipSelected = false,
                     isAllChipSelected = true
                 )
