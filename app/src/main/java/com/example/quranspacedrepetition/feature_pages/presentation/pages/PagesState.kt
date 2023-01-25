@@ -8,4 +8,6 @@ data class PagesState(
     val pagesDueToday: List<Page> = emptyList(),
     val isTodayChipSelected: Boolean = true,
     val isAllChipSelected: Boolean = false,
+    val isGradeDialogVisible: Boolean = false,
+    val numberPickerValue: Int = 0,
 )

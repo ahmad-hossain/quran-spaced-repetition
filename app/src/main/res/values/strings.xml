@@ -7,4 +7,6 @@
     <string name="interval">Interval</string>
     <string name="repetitions">Repetitions</string>
     <string name="due_date">Due Date</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
 </resources>

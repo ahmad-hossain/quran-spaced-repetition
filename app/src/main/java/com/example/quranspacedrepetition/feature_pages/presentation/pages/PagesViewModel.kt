@@ -41,10 +41,18 @@ class PagesViewModel @Inject constructor(
                     isAllChipSelected = true
                 )
             }
+            is GradeDialogDismissed -> state = state.copy(isGradeDialogVisible = false)
+            is GradeDialogConfirmed -> {
+                state = state.copy(isGradeDialogVisible = false)
+                // TODO Calculate eFactor, interval, etc..
+            }
+            is NumberPickerValueChanged -> state = state.copy(numberPickerValue = event.newValue)
         }
     }
 
     init {
+        // TODO handle missed reviews
+
         val currEpochDay = LocalDate.now().toEpochDay()
         repository.getDuePagesForEpochDay(currEpochDay).onEach {
             state = state.copy(pagesDueToday = it)

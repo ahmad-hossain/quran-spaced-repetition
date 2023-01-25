@@ -6,4 +6,7 @@ sealed class PagesEvent {
     data class PageClicked(val page: Page) : PagesEvent()
     object TodayChipClicked : PagesEvent()
     object AllChipClicked : PagesEvent()
+    object GradeDialogConfirmed : PagesEvent()
+    object GradeDialogDismissed : PagesEvent()
+    data class NumberPickerValueChanged(val newValue: Int) : PagesEvent()
 }
