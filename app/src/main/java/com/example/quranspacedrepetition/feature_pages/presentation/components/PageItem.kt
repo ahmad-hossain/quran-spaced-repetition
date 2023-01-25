@@ -1,22 +1,24 @@
 package com.example.quranspacedrepetition.feature_pages.presentation.components
 
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.quranspacedrepetition.feature_pages.domain.model.Page
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PageItem(
     modifier: Modifier = Modifier,
     page: Page
 ) {
-    ListItem(
-        modifier = modifier,
-        leadingContent = { Text(page.pageNumber.toString()) },
-        headlineText = {},
-        trailingContent = { Text(page.repetitions.toString()) },
+    val formattedDate = page.dueDate.format(
+        DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
     )
+    Row(modifier) {
+        TableCell(text = page.pageNumber.toString(), weight = 1f)
+        TableCell(text = page.interval.toString(), weight = 1f)
+        TableCell(text = page.repetitions.toString(), weight = 1f)
+        TableCell(text = formattedDate, weight = 1f)
+    }
 }

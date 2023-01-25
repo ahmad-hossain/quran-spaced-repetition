@@ -3,4 +3,8 @@
     <string name="today">Today</string>
     <string name="all">All</string>
     <string name="pages">Pages</string>
+    <string name="page_number">Page No</string>
+    <string name="interval">Interval</string>
+    <string name="repetitions">Repetitions</string>
+    <string name="due_date">Due Date</string>
 </resources>
