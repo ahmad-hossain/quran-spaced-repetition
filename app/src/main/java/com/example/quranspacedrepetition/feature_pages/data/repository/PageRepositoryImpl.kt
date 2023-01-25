@@ -9,6 +9,8 @@ class PageRepositoryImpl(
     private val pageDao: PageDao
 ) : PageRepository {
     override fun getPages(): Flow<List<Page>> = pageDao.getPages()
+    override fun getDuePagesForEpochDay(epochDay: Long): Flow<List<Page>> =
+        pageDao.getDuePagesForEpochDay(epochDay)
 
     override suspend fun updatePage(page: Page) {
         pageDao.updatePage(page)
