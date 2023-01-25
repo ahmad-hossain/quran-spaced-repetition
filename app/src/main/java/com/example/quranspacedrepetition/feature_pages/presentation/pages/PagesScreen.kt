@@ -34,20 +34,16 @@ fun PagesScreen(
     Scaffold(
         topBar = { CenterAlignedTopAppBar(title = { Text(stringResource(R.string.pages)) }) }
     ) { innerPadding ->
-        Column(Modifier.padding(innerPadding)) {
-
-            Spacer(modifier = Modifier.padding(8.dp))
-
-            LazyColumn {
-                item {
-                    FilterChipsSection()
-                }
-                stickyHeader {
+        LazyColumn(Modifier.padding(innerPadding)) {
+            item {
+                FilterChipsSection()
+            }
+            stickyHeader {
+                if (state.displayedPages.isNotEmpty())
                     TableHeader()
-                }
-                items(state.displayedPages) { page ->
-                    PageItem(page = page)
-                }
+            }
+            items(state.displayedPages) { page ->
+                PageItem(page = page)
             }
         }
     }
