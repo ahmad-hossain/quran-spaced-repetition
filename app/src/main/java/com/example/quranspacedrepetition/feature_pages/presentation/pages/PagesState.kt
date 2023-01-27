@@ -9,5 +9,5 @@ data class PagesState(
     val isTodayChipSelected: Boolean = true,
     val isAllChipSelected: Boolean = false,
     val isGradeDialogVisible: Boolean = false,
-    val numberPickerValue: Int = 0,
+    val selectedGrade: Int = 0,
 )

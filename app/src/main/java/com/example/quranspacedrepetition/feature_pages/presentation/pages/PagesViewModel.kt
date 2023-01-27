@@ -48,7 +48,8 @@ class PagesViewModel @Inject constructor(
                 state = state.copy(isGradeDialogVisible = false)
                 // TODO Calculate eFactor, interval, etc.. and update Page
             }
-            is NumberPickerValueChanged -> state = state.copy(numberPickerValue = event.newValue)
+            is NumberPickerValueChanged -> state = state.copy(selectedGrade = event.newValue)
+            is GradeSelected -> state = state.copy(selectedGrade = event.grade)
         }
     }
 
