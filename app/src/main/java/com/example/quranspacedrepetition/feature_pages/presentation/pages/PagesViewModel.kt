@@ -10,6 +10,7 @@ import com.example.quranspacedrepetition.feature_pages.domain.repository.PageRep
 import com.example.quranspacedrepetition.feature_pages.domain.use_case.SuperMemo
 import com.example.quranspacedrepetition.feature_pages.presentation.pages.PagesEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -49,12 +50,13 @@ class PagesViewModel @Inject constructor(
                     isAllChipSelected = true
                 )
             }
-            is GradeDialogDismissed -> state = state.copy(isGradeDialogVisible = false)
+            is GradeDialogDismissed -> state = state.copy(isGradeDialogVisible = false, selectedGrade = 5)
             is GradeDialogConfirmed -> {
-                state = state.copy(isGradeDialogVisible = false)
+                val grade = state.selectedGrade
+                state = state.copy(isGradeDialogVisible = false, selectedGrade = 5)
 
-                val updatedPage = superMemoUseCase(page = lastClickedPage, grade = state.selectedGrade)
-                viewModelScope.launch {
+                val updatedPage = superMemoUseCase(page = lastClickedPage, grade = grade)
+                viewModelScope.launch(Dispatchers.IO) {
                     repository.updatePage(
                         updatedPage.copy(
                             dueDate = LocalDate.now().plusDays(updatedPage.interval.toLong())
@@ -72,11 +74,17 @@ class PagesViewModel @Inject constructor(
 
         val currEpochDay = LocalDate.now().toEpochDay()
         repository.getDuePagesForEpochDay(currEpochDay).onEach {
-            state = state.copy(pagesDueToday = it)
+            state = state.copy(
+                displayedPages = if (state.isTodayChipSelected) it else state.displayedPages,
+                pagesDueToday = it
+            )
         }.launchIn(viewModelScope)
 
         repository.getPages().onEach {
-            state = state.copy(allPages = it)
+            state = state.copy(
+                displayedPages = if (state.isAllChipSelected) it else state.displayedPages,
+                allPages = it
+            )
         }.launchIn(viewModelScope)
     }
 }
