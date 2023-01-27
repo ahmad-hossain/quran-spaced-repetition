@@ -31,32 +31,32 @@ fun GradePageDialog(
     val gradeOptions = listOf(
         GradeOption(
             grade = 5,
-            text = "5 - perfect response",
+            text = stringResource(R.string.grade_5_desc),
             onSelectGrade = onSelectGrade,
         ),
         GradeOption(
             grade = 4,
-            text = "4 - correct response after a hesitation",
+            text = stringResource(R.string.grade_4_desc),
             onSelectGrade = onSelectGrade,
         ),
         GradeOption(
             grade = 3,
-            text = "3 - correct response recalled with serious difficulty",
+            text = stringResource(R.string.grade_3_desc),
             onSelectGrade = onSelectGrade,
         ),
         GradeOption(
             grade = 2,
-            text = "2 - incorrect response; where the correct one seemed easy to recall",
+            text = stringResource(R.string.grade_2_desc),
             onSelectGrade = onSelectGrade,
         ),
         GradeOption(
             grade = 1,
-            text = "1 - incorrect response; the correct one remembered",
+            text = stringResource(R.string.grade_1_desc),
             onSelectGrade = onSelectGrade,
         ),
         GradeOption(
             grade = 0,
-            text = "0 - complete blackout",
+            text = stringResource(R.string.grade_0_desc),
             onSelectGrade = onSelectGrade,
         ),
     )
@@ -74,7 +74,7 @@ fun GradePageDialog(
                 Text(stringResource(R.string.cancel))
             }
         },
-        title = { Text("Assign Grade") },
+        title = { Text(stringResource(R.string.assign_grade)) },
         text = {
             val dividerColor = LocalContentColor.current.copy(alpha = 0.7f)
 

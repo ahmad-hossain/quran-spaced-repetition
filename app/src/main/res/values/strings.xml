@@ -9,4 +9,11 @@
     <string name="due_date">Due Date</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="grade_5_desc">5 - perfect response</string>
+    <string name="grade_4_desc">4 - correct response after a hesitation</string>
+    <string name="grade_3_desc">3 - correct response recalled with serious difficulty</string>
+    <string name="grade_2_desc">2 - incorrect response; where the correct one seemed easy to recall</string>
+    <string name="grade_1_desc">1 - incorrect response; the correct one remembered</string>
+    <string name="grade_0_desc">0 - complete blackout</string>
+    <string name="assign_grade">Assign Grade</string>
 </resources>
