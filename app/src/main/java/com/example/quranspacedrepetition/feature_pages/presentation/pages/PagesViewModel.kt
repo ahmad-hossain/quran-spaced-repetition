@@ -26,7 +26,9 @@ class PagesViewModel @Inject constructor(
         Timber.d("%s : %s", event::class.simpleName, event.toString())
 
         when (event) {
-            is PageClicked -> TODO()
+            is PageClicked -> {
+                state = state.copy(isGradeDialogVisible = true)
+            }
             is TodayChipClicked -> {
                 state = state.copy(
                     displayedPages = state.pagesDueToday,
@@ -44,7 +46,7 @@ class PagesViewModel @Inject constructor(
             is GradeDialogDismissed -> state = state.copy(isGradeDialogVisible = false)
             is GradeDialogConfirmed -> {
                 state = state.copy(isGradeDialogVisible = false)
-                // TODO Calculate eFactor, interval, etc..
+                // TODO Calculate eFactor, interval, etc.. and update Page
             }
             is NumberPickerValueChanged -> state = state.copy(numberPickerValue = event.newValue)
         }

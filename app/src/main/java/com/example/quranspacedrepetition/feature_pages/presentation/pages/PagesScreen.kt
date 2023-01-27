@@ -1,13 +1,16 @@
 package com.example.quranspacedrepetition.feature_pages.presentation.pages
 
+import android.view.ContextThemeWrapper
 import android.widget.NumberPicker
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.StarRate
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -33,7 +36,6 @@ fun PagesScreen(
     viewModel: PagesViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state
-    val colorScheme = MaterialTheme.colorScheme
     val isSystemInDarkTheme = isSystemInDarkTheme()
 
     if (state.isGradeDialogVisible) {
@@ -51,23 +53,37 @@ fun PagesScreen(
             },
             title = { Text("Assign Grade") },
             text = {
-                AndroidView(
-                    modifier = Modifier.fillMaxWidth(),
-                    factory = { context ->
-                        val numberPickerStyle = when(isSystemInDarkTheme) {
-                            true -> R.style.NumberPickerTextColorStyle_Dark
-                            false -> R.style.NumberPickerTextColorStyle_Light
+                Column {
+                    AndroidView(
+                        modifier = Modifier.fillMaxWidth(),
+                        factory = { context ->
+                            val numberPickerStyle = when (isSystemInDarkTheme) {
+                                true -> R.style.NumberPickerTextColorStyle_Dark
+                                false -> R.style.NumberPickerTextColorStyle_Light
+                            }
+                            NumberPicker(ContextThemeWrapper(context, numberPickerStyle)).apply {
+                                setOnValueChangedListener { _, _, newValue ->
+                                    viewModel.onEvent(PagesEvent.NumberPickerValueChanged(newValue))
+                                }
+                                value = 0
+                                minValue = 0
+                                maxValue = 5
+                            }
                         }
-                        NumberPicker(android.view.ContextThemeWrapper(context, numberPickerStyle)).apply {
-                            setOnValueChangedListener { _, _, newValue -> viewModel.onEvent(PagesEvent.NumberPickerValueChanged(newValue)) }
-                            value = 0
-                            minValue = 0
-                            maxValue = 5
-                        }
-                    }
-                )
+                    )
+                    Text(
+                        text = "5: perfect response.\n\n" +
+                                "4: correct response after a hesitation.\n\n" +
+                                "3: correct response recalled with serious difficulty.\n\n" +
+                                "2: incorrect response; where the correct one seemed easy to recall.\n\n" +
+                                "1: incorrect response; the correct one remembered.\n\n" +
+                                "0: complete blackout.\n\n",
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize
+                    )
+                }
+
             },
-//            icon = {}
+            icon = { Icon(Icons.Outlined.StarRate, null) }
         )
     }
 
@@ -83,7 +99,10 @@ fun PagesScreen(
                     TableHeader()
             }
             items(state.displayedPages) { page ->
-                PageItem(page = page)
+                PageItem(
+                    modifier = Modifier.clickable { viewModel.onEvent(PagesEvent.PageClicked(page)) },
+                    page = page
+                )
             }
         }
     }
