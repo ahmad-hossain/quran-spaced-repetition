@@ -70,9 +70,15 @@ class PagesViewModel @Inject constructor(
     }
 
     init {
-        // TODO handle missed reviews
-
         val currEpochDay = LocalDate.now().toEpochDay()
+        val overduePages = repository.getOverduePages()
+        // todo add toast msg
+        overduePages.forEach { page ->
+            viewModelScope.launch(Dispatchers.IO) {
+                repository.updatePage(page.copy(dueDate = LocalDate.now()))
+            }
+        }
+
         repository.getDuePagesForEpochDay(currEpochDay).onEach {
             state = state.copy(
                 displayedPages = if (state.isTodayChipSelected) it else state.displayedPages,

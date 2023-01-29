@@ -8,5 +8,7 @@ interface PageRepository {
 
     fun getDuePagesForEpochDay(epochDay: Long): Flow<List<Page>>
 
+    fun getOverduePages(): List<Page>
+
     suspend fun updatePage(page: Page)
 }

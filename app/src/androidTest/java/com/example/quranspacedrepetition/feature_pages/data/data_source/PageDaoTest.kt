@@ -50,4 +50,24 @@ class PageDaoTest {
 
         assertThat(data).containsExactly(pageDueToday)
     }
+
+    @Test
+    fun getOverduePages() = runTest {
+        val overduePages = listOf(
+            Page(pageNumber = 0, dueDate = LocalDate.ofEpochDay(15)),
+            Page(pageNumber = 1, dueDate = LocalDate.ofEpochDay(24)),
+        )
+        val currDate = LocalDate.ofEpochDay(25)
+        val otherPages = listOf(
+            Page(pageNumber = 2, dueDate = currDate),
+            Page(pageNumber = 3, dueDate = currDate),
+            Page(pageNumber = 4, dueDate = currDate.plusDays(10)),
+            Page(pageNumber = 5, dueDate = LocalDate.ofEpochDay(Page.DEFAULT_DUE_DATE_EPOCH_DAY)),
+        )
+        (otherPages + overduePages).forEach { dao.insertPage(it) }
+
+        val data = dao.getOverduePages(currEpochDay = currDate.toEpochDay())
+
+        assertThat(data).containsExactlyElementsIn(overduePages)
+    }
 }

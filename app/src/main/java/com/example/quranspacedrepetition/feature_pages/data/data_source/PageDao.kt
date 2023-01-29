@@ -6,6 +6,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.quranspacedrepetition.feature_pages.domain.model.Page
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 @Dao
 interface PageDao {
@@ -15,6 +16,9 @@ interface PageDao {
 
     @Query("SELECT * FROM Page WHERE dueDate=:epochDay")
     fun getDuePagesForEpochDay(epochDay: Long): Flow<List<Page>>
+
+    @Query("SELECT * FROM Page WHERE dueDate<:currEpochDay AND dueDate!=${Page.DEFAULT_DUE_DATE_EPOCH_DAY}")
+    fun getOverduePages(currEpochDay: Long = LocalDate.now().toEpochDay()): List<Page>
 
     @Insert
     suspend fun insertPage(page: Page)

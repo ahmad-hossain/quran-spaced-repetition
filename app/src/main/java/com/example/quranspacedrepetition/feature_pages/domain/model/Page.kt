@@ -18,8 +18,8 @@ data class Page(
     val repetitions: Int = 0,
     /** Easiness factor - calculated based off how easily info. is remembered */
     val eFactor: Double = 2.5,
-    /** Date this Page is due for next review, or epoch-day of 0 if never reviewed */
-    val dueDate: LocalDate = LocalDate.ofEpochDay(0)
+    /** Date this Page is due for next review, or epoch-day of [DEFAULT_DUE_DATE_EPOCH_DAY] if never reviewed */
+    val dueDate: LocalDate = LocalDate.ofEpochDay(DEFAULT_DUE_DATE_EPOCH_DAY)
 ) {
 
     object Converters {
@@ -28,5 +28,8 @@ data class Page(
 
         @TypeConverter
         fun localDateToEpochDay(date: LocalDate): Long = date.toEpochDay()
+    }
+    companion object {
+        const val DEFAULT_DUE_DATE_EPOCH_DAY = 0L
     }
 }
