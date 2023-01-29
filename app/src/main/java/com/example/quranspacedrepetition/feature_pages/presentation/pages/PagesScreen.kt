@@ -1,5 +1,6 @@
 package com.example.quranspacedrepetition.feature_pages.presentation.pages
 
+import android.widget.Toast
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -8,7 +9,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,6 +32,12 @@ fun PagesScreen(
     navigator: DestinationsNavigator,
     viewModel: PagesViewModel = hiltViewModel(),
 ) {
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.toastMessage.collect { msg ->
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+        }
+    }
     val state = viewModel.state
 
     if (state.isGradeDialogVisible) {
