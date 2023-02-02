@@ -38,15 +38,16 @@ class PageDaoTest {
 
     @Test
     fun getDuePagesForEpochDay() = runTest {
-        val pageDueToday = Page(pageNumber = 0, dueDate = LocalDate.now())
+        val dueDate = LocalDate.ofEpochDay(15)
+        val pageDueToday = Page(pageNumber = 0, dueDate = dueDate)
 
         val otherPages = listOf(
-            Page(pageNumber = 1, dueDate = LocalDate.now().minusDays(5)),
-            Page(pageNumber = 2, dueDate = LocalDate.now().plusDays(1)),
+            Page(pageNumber = 1, dueDate = dueDate.minusDays(5)),
+            Page(pageNumber = 2, dueDate = dueDate.plusDays(1)),
         )
         (otherPages + pageDueToday).forEach { dao.insertPage(it) }
 
-        val data = dao.getDuePagesForEpochDay(LocalDate.now().toEpochDay()).first()
+        val data = dao.getPagesDueToday(currEpochDay = dueDate.toEpochDay()).first()
 
         assertThat(data).containsExactly(pageDueToday)
     }

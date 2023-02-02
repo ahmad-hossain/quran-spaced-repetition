@@ -29,7 +29,7 @@ class PagesViewModel @Inject constructor(
 
     var state by mutableStateOf(PagesState())
         private set
-    lateinit var lastClickedPage: Page
+    private lateinit var lastClickedPage: Page
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
 
@@ -75,7 +75,6 @@ class PagesViewModel @Inject constructor(
     }
 
     init {
-        val currEpochDay = LocalDate.now().toEpochDay()
         viewModelScope.launch(Dispatchers.IO) {
             val overduePages = repository.getOverduePages()
             if (overduePages.isEmpty()) return@launch
@@ -85,7 +84,7 @@ class PagesViewModel @Inject constructor(
             withContext(Dispatchers.Main) { _toastMessage.emit("Added ${overduePages.size} overdue pages to today's list") }
         }
 
-        repository.getDuePagesForEpochDay(currEpochDay).onEach {
+        repository.getPagesDueToday().onEach {
             state = state.copy(
                 displayedPages = if (state.isTodayChipSelected) it else state.displayedPages,
                 pagesDueToday = it
