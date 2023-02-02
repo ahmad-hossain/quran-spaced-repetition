@@ -8,7 +8,5 @@ interface PageRepository {
 
     fun getPagesDueToday(): Flow<List<Page>>
 
-    fun getOverduePages(): List<Page>
-
     suspend fun updatePage(page: Page)
 }

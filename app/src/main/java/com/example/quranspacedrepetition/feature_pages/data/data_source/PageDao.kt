@@ -14,11 +14,8 @@ interface PageDao {
     @Query("SELECT * FROM Page")
     fun getPages(): Flow<List<Page>>
 
-    @Query("SELECT * FROM Page WHERE dueDate=:currEpochDay")
+    @Query("SELECT * FROM Page WHERE dueDate<=:currEpochDay")
     fun getPagesDueToday(currEpochDay: Long = LocalDate.now().toEpochDay()): Flow<List<Page>>
-
-    @Query("SELECT * FROM Page WHERE dueDate<:currEpochDay")
-    fun getOverduePages(currEpochDay: Long = LocalDate.now().toEpochDay()): List<Page>
 
     @Insert
     suspend fun insertPage(page: Page)

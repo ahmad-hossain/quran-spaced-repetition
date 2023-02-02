@@ -12,8 +12,6 @@ class PageRepositoryImpl(
 
     override fun getPagesDueToday(): Flow<List<Page>> = pageDao.getPagesDueToday()
 
-    override fun getOverduePages(): List<Page> = pageDao.getOverduePages()
-
     override suspend fun updatePage(page: Page) {
         pageDao.updatePage(page)
     }

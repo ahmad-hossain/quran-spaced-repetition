@@ -11,12 +11,9 @@ import com.example.quranspacedrepetition.feature_pages.domain.use_case.SuperMemo
 import com.example.quranspacedrepetition.feature_pages.presentation.pages.PagesEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 import java.time.LocalDate
 import javax.inject.Inject
@@ -30,8 +27,6 @@ class PagesViewModel @Inject constructor(
     var state by mutableStateOf(PagesState())
         private set
     private lateinit var lastClickedPage: Page
-    private val _toastMessage = MutableSharedFlow<String>()
-    val toastMessage = _toastMessage.asSharedFlow()
 
     fun onEvent(event: PagesEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
@@ -75,15 +70,6 @@ class PagesViewModel @Inject constructor(
     }
 
     init {
-        viewModelScope.launch(Dispatchers.IO) {
-            val overduePages = repository.getOverduePages()
-            if (overduePages.isEmpty()) return@launch
-            overduePages.forEach { page ->
-                repository.updatePage(page.copy(dueDate = LocalDate.now()))
-            }
-            withContext(Dispatchers.Main) { _toastMessage.emit("Added ${overduePages.size} overdue pages to today's list") }
-        }
-
         repository.getPagesDueToday().onEach {
             state = state.copy(
                 displayedPages = if (state.isTodayChipSelected) it else state.displayedPages,
