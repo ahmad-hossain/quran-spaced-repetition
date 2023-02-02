@@ -12,13 +12,13 @@ fun PageItem(
     modifier: Modifier = Modifier,
     page: Page
 ) {
-    val formattedDate = page.dueDate.format(
+    val formattedDate = page.dueDate?.format(
         DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
     )
     Row(modifier) {
         TableCell(text = page.pageNumber.toString(), weight = 1f)
         TableCell(text = page.interval.toString(), weight = 1f)
         TableCell(text = page.repetitions.toString(), weight = 1f)
-        TableCell(text = formattedDate, weight = 1f)
+        TableCell(text = formattedDate.toString(), weight = 1f)
     }
 }

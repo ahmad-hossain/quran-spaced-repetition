@@ -63,7 +63,7 @@ class PageDaoTest {
             Page(pageNumber = 2, dueDate = currDate),
             Page(pageNumber = 3, dueDate = currDate),
             Page(pageNumber = 4, dueDate = currDate.plusDays(10)),
-            Page(pageNumber = 5, dueDate = LocalDate.ofEpochDay(Page.DEFAULT_DUE_DATE_EPOCH_DAY)),
+            Page(pageNumber = 5, dueDate = null),
         )
         (otherPages + overduePages).forEach { dao.insertPage(it) }
 

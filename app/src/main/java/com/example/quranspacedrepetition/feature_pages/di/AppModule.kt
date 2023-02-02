@@ -37,7 +37,7 @@ object AppModule {
 
                 val defaultPage = Page(pageNumber = 0)
                 (1..611).forEach { pageNum ->
-                    db.execSQL("INSERT INTO Page VALUES ($pageNum, ${defaultPage.interval}, ${defaultPage.repetitions}, ${defaultPage.eFactor}, ${defaultPage.dueDate.toEpochDay()})")
+                    db.execSQL("INSERT INTO Page VALUES ($pageNum, ${defaultPage.interval}, ${defaultPage.repetitions}, ${defaultPage.eFactor}, ${defaultPage.dueDate})")
                 }
             }
         }).build()
