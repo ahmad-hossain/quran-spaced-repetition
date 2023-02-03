@@ -8,9 +8,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.quranspacedrepetition.R
@@ -35,9 +37,9 @@ fun PagesScreen(
         GradePageDialog(
             onDismissRequest = { viewModel.onEvent(PagesEvent.GradeDialogDismissed) },
             onConfirm = { viewModel.onEvent(PagesEvent.GradeDialogConfirmed) },
-            onDismiss = { viewModel.onEvent(PagesEvent.GradeDialogDismissed)},
+            onDismiss = { viewModel.onEvent(PagesEvent.GradeDialogDismissed) },
             selectedGrade = state.selectedGrade,
-            onSelectGrade = { viewModel.onEvent(PagesEvent.GradeSelected(it))},
+            onSelectGrade = { viewModel.onEvent(PagesEvent.GradeSelected(it)) },
         )
     }
 
@@ -48,6 +50,7 @@ fun PagesScreen(
             item {
                 FilterChipsSection()
             }
+            item { Spacer(Modifier.height(8.dp)) }
             stickyHeader {
                 if (state.displayedPages.isNotEmpty())
                     TableHeader()
@@ -76,18 +79,41 @@ private fun FilterChipsSection(
             .padding(horizontal = 16.dp)
     ) {
         FilterChip(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .height(36.dp),
             selected = state.isTodayChipSelected,
             onClick = { viewModel.onEvent(PagesEvent.TodayChipClicked) },
-            leadingIcon = { Icon(imageVector = Icons.Outlined.Today, contentDescription = null) },
-            label = { Text(text = stringResource(R.string.today)) },
+            label = {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 8.dp),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(imageVector = Icons.Outlined.Today, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text(text = stringResource(R.string.today))
+                }
+            },
         )
         Spacer(modifier = Modifier.padding(8.dp))
         FilterChip(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .height(36.dp),
             selected = state.isAllChipSelected,
             onClick = { viewModel.onEvent(PagesEvent.AllChipClicked) },
-            label = { Text(text = stringResource(R.string.all)) },
+            label = {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(end = 8.dp),
+                    text = stringResource(R.string.all),
+                    textAlign = TextAlign.Center
+                )
+            },
         )
     }
 }
