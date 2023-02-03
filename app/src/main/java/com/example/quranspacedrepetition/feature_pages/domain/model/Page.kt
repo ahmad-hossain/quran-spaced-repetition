@@ -5,8 +5,6 @@ import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
 
 @TypeConverters(Page.Converters::class)
 @Entity
@@ -23,10 +21,18 @@ data class Page(
     /** Date this Page is due for next review, or null if never reviewed */
     val dueDate: LocalDate? = null
 ) {
-    val formattedDueDate: String
-        get() = dueDate?.format(
-            DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
-        ).toString()
+    val relativeDueDate: String
+        get() = dueDate?.let {
+            val periodTillDueDate = LocalDate.now().until(it)
+            var s = ""
+            if (periodTillDueDate.years != 0)
+                s += "${periodTillDueDate.years}Y "
+            if (periodTillDueDate.months != 0)
+                s += "${periodTillDueDate.months}M "
+            if (periodTillDueDate.days != 0)
+                s += "${periodTillDueDate.days}D"
+            s.trim()
+        }.toString()
 
     object Converters {
         @TypeConverter

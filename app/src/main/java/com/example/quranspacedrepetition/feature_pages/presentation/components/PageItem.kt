@@ -14,6 +14,6 @@ fun PageItem(
         TableCell(text = page.pageNumber.toString(), weight = 1f)
         TableCell(text = page.interval.toString(), weight = 1f)
         TableCell(text = page.repetitions.toString(), weight = 1f)
-        TableCell(text = page.formattedDueDate, weight = 1f)
+        TableCell(text = page.relativeDueDate, weight = 1f)
     }
 }
