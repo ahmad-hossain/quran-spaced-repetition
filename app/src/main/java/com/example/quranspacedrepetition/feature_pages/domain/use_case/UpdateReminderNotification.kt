@@ -1,6 +1,7 @@
 package com.example.quranspacedrepetition.feature_pages.domain.use_case
 
 import android.Manifest
+import android.app.AlarmManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
@@ -25,10 +26,15 @@ class UpdateReminderNotification @Inject constructor(
     private val reminderNotificationBuilder: NotificationCompat.Builder,
     private val notificationManager: NotificationManagerCompat,
     private val scheduleNotificationAlarm: ScheduleNotificationAlarm,
+    private val alarmManager: AlarmManager,
 ) {
 
     suspend operator fun invoke() = withContext(Dispatchers.IO) {
         Timber.d("invoke()")
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
+            Timber.d("invoke: Can't schedule exact alarms; exiting use-case")
+            return@withContext
+        }
 
         val duePages = repository.getPagesDueToday().first()
         Timber.d("onReceive: ${duePages.size} pages due today")
