@@ -47,6 +47,7 @@ class UpdateReminderNotification @Inject constructor(
             true -> context.getString(R.string.reminder_notification_text_no_pages_due)
             false -> context.getString(R.string.reminder_notification_text, duePages.size)
         }
+        Timber.d("updateNotificationBuilder: isNotificationOngoing=$isNotificationOngoing, contentText=$contentText")
         reminderNotificationBuilder
             .setOngoing(isNotificationOngoing)
             .setContentText(contentText)
@@ -70,6 +71,7 @@ class UpdateReminderNotification @Inject constructor(
                 context,
                 Manifest.permission.POST_NOTIFICATIONS
             ) == PackageManager.PERMISSION_GRANTED
+        Timber.d("sendNotification: notificationPermissionGranted=$notificationPermissionGranted")
         if (notificationPermissionGranted) {
             notificationManager.notify(
                 REMINDER_NOTIFICATION_ID,
