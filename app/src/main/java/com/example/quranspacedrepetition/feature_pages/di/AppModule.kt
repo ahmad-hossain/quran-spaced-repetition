@@ -1,11 +1,13 @@
 package com.example.quranspacedrepetition.feature_pages.di
 
 import android.annotation.SuppressLint
+import android.app.AlarmManager
 import android.app.Application
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import androidx.activity.ComponentActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.room.Room
@@ -77,6 +79,10 @@ object AppModule {
     @Provides
     fun provideNotificationManagerCompat(@ApplicationContext context: Context) =
         NotificationManagerCompat.from(context)
+
+    @Provides
+    fun provideAlarmManager(@ApplicationContext context: Context) =
+        context.getSystemService(ComponentActivity.ALARM_SERVICE) as AlarmManager
 
     /** Already doing API Check */
     @SuppressLint("InlinedApi")

@@ -2,22 +2,28 @@ package com.example.quranspacedrepetition.feature_pages.domain.use_case
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.PendingIntent
-import android.content.Context
-import androidx.activity.ComponentActivity
-import dagger.hilt.android.qualifiers.ApplicationContext
+import android.os.Build
+import androidx.core.app.NotificationManagerCompat
+import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
 class ScheduleNotificationAlarm @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val alarmPendingIntent: PendingIntent,
+    private val notificationManager: NotificationManagerCompat,
+    private val alarmManager: AlarmManager,
 ) {
 
     /** USE_EXACT_ALARM permission can substitute for SCHEDULE_EXACT_ALARM */
     @SuppressLint("MissingPermission")
     operator fun invoke() {
-        val alarmManager = context.getSystemService(ComponentActivity.ALARM_SERVICE) as AlarmManager
+        if (!canShowReminderNotification()) {
+            Timber.d("invoke: Can't show review reminder notification; exiting alarm use-case")
+            return
+        }
 
         val calendar = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, 0)
@@ -31,5 +37,23 @@ class ScheduleNotificationAlarm @Inject constructor(
             calendar.timeInMillis,
             alarmPendingIntent
         )
+    }
+
+    /** Permission check already handled */
+    @SuppressLint("NewApi")
+    private fun canShowReminderNotification(): Boolean {
+        fun NotificationChannel.isChannelEnabled(): Boolean {
+            return importance != NotificationManager.IMPORTANCE_NONE
+        }
+
+        val isOreoOrLater = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
+        val notificationChannel =
+            notificationManager.getNotificationChannel(UpdateReminderNotification.REMINDER_NOTIFICATION_CHANNEL_ID)
+        val notificationsEnabled = notificationManager.areNotificationsEnabled()
+
+        return when (isOreoOrLater) {
+            true -> notificationsEnabled && notificationChannel?.isChannelEnabled() == true
+            false -> notificationsEnabled
+        }
     }
 }
