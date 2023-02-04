@@ -1,5 +1,6 @@
 package com.example.quranspacedrepetition.feature_pages.domain.use_case
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
@@ -13,6 +14,8 @@ class ScheduleNotificationAlarm @Inject constructor(
     private val alarmPendingIntent: PendingIntent,
 ) {
 
+    /** USE_EXACT_ALARM permission can substitute for SCHEDULE_EXACT_ALARM */
+    @SuppressLint("MissingPermission")
     operator fun invoke() {
         val alarmManager = context.getSystemService(ComponentActivity.ALARM_SERVICE) as AlarmManager
 
