@@ -1,13 +1,15 @@
 package com.example.quranspacedrepetition.feature_pages.domain.receiver
 
-import android.annotation.SuppressLint
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Context.NOTIFICATION_SERVICE
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.quranspacedrepetition.R
@@ -31,8 +33,6 @@ class AlarmReceiver : BroadcastReceiver() {
 
     private lateinit var context: Context
 
-    /** Permission requested automatically for targetSDK < 33 */
-    @SuppressLint("MissingPermission")
     override fun onReceive(context: Context?, intent: Intent?) = goAsync {
         Timber.d("onReceive: intent=$intent")
         this@AlarmReceiver.context = context ?: return@goAsync
@@ -47,10 +47,15 @@ class AlarmReceiver : BroadcastReceiver() {
             )
 
             createNotificationChannel()
-            notificationManager.notify(
-                REMINDER_NOTIFICATION_ID,
-                reminderNotificationBuilder.build()
-            )
+
+            val notificationPermissionGranted = ActivityCompat
+                .checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+            if (notificationPermissionGranted) {
+                notificationManager.notify(
+                    REMINDER_NOTIFICATION_ID,
+                    reminderNotificationBuilder.build()
+                )
+            }
 
             scheduleNotificationAlarm()
         }
