@@ -59,8 +59,6 @@ class UpdateReminderNotification @Inject constructor(
             val importance = NotificationManager.IMPORTANCE_DEFAULT
             val mChannel =
                 NotificationChannel(REMINDER_NOTIFICATION_CHANNEL_ID, name, importance)
-            val notificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(mChannel)
         }
     }

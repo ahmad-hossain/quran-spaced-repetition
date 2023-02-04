@@ -75,7 +75,7 @@ object AppModule {
     }
 
     @Provides
-    fun provideNotificationManager(@ApplicationContext context: Context) =
+    fun provideNotificationManagerCompat(@ApplicationContext context: Context) =
         NotificationManagerCompat.from(context)
 
     /** Already doing API Check */
