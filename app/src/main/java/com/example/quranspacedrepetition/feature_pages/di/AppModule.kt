@@ -18,6 +18,7 @@ import com.example.quranspacedrepetition.feature_pages.data.repository.PageRepos
 import com.example.quranspacedrepetition.feature_pages.domain.model.Page
 import com.example.quranspacedrepetition.feature_pages.domain.receiver.AlarmReceiver
 import com.example.quranspacedrepetition.feature_pages.domain.repository.PageRepository
+import com.example.quranspacedrepetition.feature_pages.domain.use_case.UpdateReminderNotification
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -66,8 +67,7 @@ object AppModule {
         }
         val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, flags)
 
-        return NotificationCompat.Builder(context, AlarmReceiver.REMINDER_NOTIFICATION_CHANNEL_ID)
-            .setOngoing(true)
+        return NotificationCompat.Builder(context, UpdateReminderNotification.REMINDER_NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(context.getString(R.string.reminder_notification_title))
             .setContentIntent(pendingIntent)

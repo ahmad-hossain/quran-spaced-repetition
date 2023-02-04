@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.quranspacedrepetition.R
+import com.example.quranspacedrepetition.feature_pages.domain.model.Page
 import com.example.quranspacedrepetition.feature_pages.domain.repository.PageRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -33,24 +34,22 @@ class UpdateReminderNotification @Inject constructor(
         Timber.d("onReceive: ${duePages.size} pages due today")
 
         withContext(Dispatchers.Main) {
-            // TODO make notification dismissable if 0 pages due
-            reminderNotificationBuilder.setContentText(
-                context.getString(R.string.reminder_notification_text, duePages.size)
-            )
-
+            updateNotificationBuilder(duePages)
             createNotificationChannel()
-
-            val notificationPermissionGranted = ActivityCompat
-                .checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
-            if (notificationPermissionGranted) {
-                notificationManager.notify(
-                    REMINDER_NOTIFICATION_ID,
-                    reminderNotificationBuilder.build()
-                )
-            }
-
+            sendNotification()
             scheduleNotificationAlarm()
         }
+    }
+
+    private fun updateNotificationBuilder(duePages: List<Page>) {
+        val isNotificationOngoing = duePages.isNotEmpty()
+        val contentText = when (duePages.isEmpty()) {
+            true -> context.getString(R.string.reminder_notification_text_no_pages_due)
+            false -> context.getString(R.string.reminder_notification_text, duePages.size)
+        }
+        reminderNotificationBuilder
+            .setOngoing(isNotificationOngoing)
+            .setContentText(contentText)
     }
 
     private fun createNotificationChannel() {
@@ -62,6 +61,20 @@ class UpdateReminderNotification @Inject constructor(
             val notificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(mChannel)
+        }
+    }
+
+    private fun sendNotification() {
+        val notificationPermissionGranted = ActivityCompat
+            .checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        if (notificationPermissionGranted) {
+            notificationManager.notify(
+                REMINDER_NOTIFICATION_ID,
+                reminderNotificationBuilder.build()
+            )
         }
     }
 
