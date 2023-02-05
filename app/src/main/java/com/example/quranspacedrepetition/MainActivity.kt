@@ -1,7 +1,6 @@
 package com.example.quranspacedrepetition
 
 import android.Manifest
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,7 +11,6 @@ import com.example.quranspacedrepetition.feature_pages.presentation.pages.NavGra
 import com.example.quranspacedrepetition.ui.theme.QuranSpacedRepetitionTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
 import dagger.hilt.android.AndroidEntryPoint
-import timber.log.Timber
 import java.util.*
 import javax.inject.Inject
 
