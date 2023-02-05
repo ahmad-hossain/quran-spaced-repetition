@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.quranspacedrepetition.feature_pages.domain.model.Page
 import com.example.quranspacedrepetition.feature_pages.domain.repository.PageRepository
 import com.example.quranspacedrepetition.feature_pages.domain.use_case.SuperMemo
+import com.example.quranspacedrepetition.feature_pages.domain.use_case.UpdateReminderNotification
 import com.example.quranspacedrepetition.feature_pages.presentation.pages.PagesEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +23,7 @@ import javax.inject.Inject
 class PagesViewModel @Inject constructor(
     private val repository: PageRepository,
     private val superMemoUseCase: SuperMemo,
+    private val updateReminderNotificationUseCase: UpdateReminderNotification,
 ) : ViewModel() {
 
     var state by mutableStateOf(PagesState())
@@ -62,6 +64,7 @@ class PagesViewModel @Inject constructor(
                             dueDate = LocalDate.now().plusDays(updatedPage.interval.toLong())
                         )
                     )
+                    updateReminderNotificationUseCase()
                 }
             }
             is NumberPickerValueChanged -> state = state.copy(selectedGrade = event.newValue)
