@@ -16,4 +16,8 @@
     <string name="grade_1_desc">1 - incorrect response; the correct one remembered</string>
     <string name="grade_0_desc">0 - complete blackout</string>
     <string name="assign_grade">Assign Grade</string>
+    <string name="reminder_notification_channel_name">Quran Review Reminder</string>
+    <string name="reminder_notification_title">Daily Quran Review Reminder</string>
+    <string name="reminder_notification_text">%d Pages Left To Review For Today</string>
+    <string name="reminder_notification_text_no_pages_due">No Pages Due Today</string>
 </resources>
