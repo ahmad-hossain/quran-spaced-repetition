@@ -29,7 +29,7 @@ data class Page(
                 s += "${periodTillDueDate.years}Y "
             if (periodTillDueDate.months != 0)
                 s += "${periodTillDueDate.months}M "
-            if (periodTillDueDate.days != 0)
+            if (periodTillDueDate.days != 0 || s.isEmpty())
                 s += "${periodTillDueDate.days}D"
             s.trim()
         }.toString()
