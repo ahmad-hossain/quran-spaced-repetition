@@ -37,38 +37,22 @@ class PageDaoTest {
     }
 
     @Test
-    fun getDuePagesForEpochDay() = runTest {
+    fun getPagesDueToday() = runTest {
         val dueDate = LocalDate.ofEpochDay(15)
-        val pageDueToday = Page(pageNumber = 0, dueDate = dueDate)
+        val pagesDueToday = listOf(
+            Page(pageNumber = 0, dueDate = dueDate),
+            Page(pageNumber = 1, dueDate = dueDate.minusDays(5)),
+        )
 
         val otherPages = listOf(
-            Page(pageNumber = 1, dueDate = dueDate.minusDays(5)),
             Page(pageNumber = 2, dueDate = dueDate.plusDays(1)),
+            Page(pageNumber = 3, dueDate = dueDate.plusDays(100)),
+            Page(pageNumber = 4, dueDate = null),
         )
-        (otherPages + pageDueToday).forEach { dao.insertPage(it) }
+        (otherPages + pagesDueToday).forEach { dao.insertPage(it) }
 
         val data = dao.getPagesDueToday(currEpochDay = dueDate.toEpochDay()).first()
 
-        assertThat(data).containsExactly(pageDueToday)
-    }
-
-    @Test
-    fun getOverduePages() = runTest {
-        val overduePages = listOf(
-            Page(pageNumber = 0, dueDate = LocalDate.ofEpochDay(15)),
-            Page(pageNumber = 1, dueDate = LocalDate.ofEpochDay(24)),
-        )
-        val currDate = LocalDate.ofEpochDay(25)
-        val otherPages = listOf(
-            Page(pageNumber = 2, dueDate = currDate),
-            Page(pageNumber = 3, dueDate = currDate),
-            Page(pageNumber = 4, dueDate = currDate.plusDays(10)),
-            Page(pageNumber = 5, dueDate = null),
-        )
-        (otherPages + overduePages).forEach { dao.insertPage(it) }
-
-        val data = dao.getOverduePages(currEpochDay = currDate.toEpochDay())
-
-        assertThat(data).containsExactlyElementsIn(overduePages)
+        assertThat(data).containsExactlyElementsIn(pagesDueToday)
     }
 }
