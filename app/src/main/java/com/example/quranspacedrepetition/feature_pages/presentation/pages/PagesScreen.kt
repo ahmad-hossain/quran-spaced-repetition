@@ -92,7 +92,11 @@ private fun FilterChipsSection(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(imageVector = Icons.Outlined.Today, contentDescription = null)
+                    Icon(
+                        modifier = Modifier.size(FilterChipDefaults.IconSize),
+                        imageVector = Icons.Outlined.Today,
+                        contentDescription = null
+                    )
                     Spacer(Modifier.width(8.dp))
                     Text(text = stringResource(R.string.today))
                 }
