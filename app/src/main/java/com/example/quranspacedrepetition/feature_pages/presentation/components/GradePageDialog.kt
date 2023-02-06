@@ -1,7 +1,7 @@
 package com.example.quranspacedrepetition.feature_pages.presentation.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.requiredHeight
+import android.content.res.Configuration
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.quranspacedrepetition.R
 
@@ -81,11 +82,14 @@ fun GradePageDialog(
             Column {
                 Divider(color = dividerColor)
                 Column(Modifier.verticalScroll(rememberScrollState())) {
-                    gradeOptions.forEach {
-                        TextRadioButton(
-                            selected = selectedGrade == it.grade,
-                            onSelect = { it.onSelectGrade(it.grade) },
-                            text = it.text,
+                    gradeOptions.forEachIndexed { index, gradeOption ->
+                        if (index != 0)
+                            Spacer(Modifier.height(6.dp))
+                        GradePageDialogOption(
+                            selected = selectedGrade == gradeOption.grade,
+                            onSelect = { gradeOption.onSelectGrade(gradeOption.grade) },
+                            grade = gradeOption.grade,
+                            description = gradeOption.text,
                         )
                     }
                 }
@@ -93,5 +97,17 @@ fun GradePageDialog(
             }
         },
         icon = { Icon(Icons.Outlined.StarRate, null) }
+    )
+}
+
+@Preview
+@Composable
+fun PreviewGradingDialog() {
+    GradePageDialog(
+        onDismissRequest = {},
+        onConfirm = {},
+        onDismiss = {},
+        selectedGrade = 0,
+        onSelectGrade = {},
     )
 }
