@@ -64,7 +64,7 @@ class PagesViewModel @Inject constructor(
                             dueDate = LocalDate.now().plusDays(updatedPage.interval.toLong())
                         )
                     )
-                    updateReminderNotificationUseCase()
+                    if (lastClickedPage.dueDate != null) updateReminderNotificationUseCase()
                 }
             }
             is NumberPickerValueChanged -> state = state.copy(selectedGrade = event.newValue)
