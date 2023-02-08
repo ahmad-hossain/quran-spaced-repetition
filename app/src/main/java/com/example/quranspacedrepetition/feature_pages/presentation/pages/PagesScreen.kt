@@ -26,6 +26,9 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
+private val FabHeight = 56.dp
+private val ScaffoldFabSpacing = 16.dp
+
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @RootNavGraph(start = true)
 @Destination
@@ -73,14 +76,16 @@ fun PagesScreen(
     Scaffold(
         topBar = { CenterAlignedTopAppBar(title = { Text(stringResource(R.string.pages)) }) },
         floatingActionButton = {
-            // TODO add bottom padding to LazyColumn so last Page is not blocked by FAB
             FloatingActionButton(
                 onClick = { viewModel.onEvent(PagesEvent.SearchFabClicked) },
                 content = { Icon(imageVector = Icons.Outlined.Search, contentDescription = null) }
             )
         },
     ) { innerPadding ->
-        LazyColumn(Modifier.padding(innerPadding)) {
+        LazyColumn(
+            Modifier.padding(innerPadding),
+            contentPadding = PaddingValues(bottom = FabHeight + ScaffoldFabSpacing * 2)
+        ) {
             item {
                 FilterChipsSection()
             }
