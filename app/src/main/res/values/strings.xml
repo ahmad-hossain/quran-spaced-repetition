@@ -18,6 +18,6 @@
     <string name="assign_grade">Assign Grade</string>
     <string name="reminder_notification_channel_name">Quran Review Reminder</string>
     <string name="reminder_notification_title">Daily Quran Review Reminder</string>
-    <string name="reminder_notification_text">%d Pages Left To Review For Today</string>
+    <string name="reminder_notification_text">%d Pages Left To Review Today</string>
     <string name="reminder_notification_text_no_pages_due">No Pages Due Today</string>
 </resources>
