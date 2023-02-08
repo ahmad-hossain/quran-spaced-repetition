@@ -2,6 +2,7 @@ package com.example.quranspacedrepetition.feature_pages.presentation.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -30,10 +31,10 @@ fun GradePageDialogOption(
         )
         Text(
             text = grade.toString(),
-            fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
             fontWeight = FontWeight.Bold,
         )
-        Spacer(Modifier.width(8.dp))
+        Text(modifier = Modifier.padding(horizontal = 4.dp), text = "-")
         Text(description)
     }
 }
