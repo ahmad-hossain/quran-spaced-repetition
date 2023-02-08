@@ -50,7 +50,7 @@ fun PagesScreen(
     }
     if (state.isSearchDialogVisible) {
         AlertDialog(
-            onDismissRequest = {},
+            onDismissRequest = { viewModel.onEvent(PagesEvent.SearchDialogDismissed) },
             confirmButton = {
                 TextButton(onClick = { viewModel.onEvent(PagesEvent.SearchDialogConfirmed) }) {
                     Text(text = stringResource(R.string.confirm))
