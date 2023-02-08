@@ -4,7 +4,9 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -12,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,9 +45,40 @@ fun PagesScreen(
             onSelectGrade = { viewModel.onEvent(PagesEvent.GradeSelected(it)) },
         )
     }
+    if (state.isSearchDialogVisible) {
+        AlertDialog(
+            onDismissRequest = {},
+            confirmButton = {
+                TextButton(onClick = { viewModel.onEvent(PagesEvent.SearchDialogConfirmed) }) {
+                    Text(text = stringResource(R.string.confirm))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.onEvent(PagesEvent.SearchDialogDismissed) }) {
+                    Text(text = stringResource(R.string.cancel))
+                }
+            },
+            icon = { Icon(imageVector = Icons.Outlined.Search, contentDescription = null) },
+            title = { Text(text = stringResource(R.string.search)) },
+            text = {
+                OutlinedTextField(
+                    value = state.searchQuery,
+                    onValueChange = { viewModel.onEvent(PagesEvent.SearchQueryChanged(it)) },
+                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                )
+            }
+        )
+    }
 
     Scaffold(
-        topBar = { CenterAlignedTopAppBar(title = { Text(stringResource(R.string.pages)) }) }
+        topBar = { CenterAlignedTopAppBar(title = { Text(stringResource(R.string.pages)) }) },
+        floatingActionButton = {
+            // TODO add bottom padding to LazyColumn so last Page is not blocked by FAB
+            FloatingActionButton(
+                onClick = { viewModel.onEvent(PagesEvent.SearchFabClicked) },
+                content = { Icon(imageVector = Icons.Outlined.Search, contentDescription = null) }
+            )
+        },
     ) { innerPadding ->
         LazyColumn(Modifier.padding(innerPadding)) {
             item {

@@ -20,4 +20,5 @@
     <string name="reminder_notification_title">Daily Quran Review Reminder</string>
     <string name="reminder_notification_text">%d Pages Left To Review Today</string>
     <string name="reminder_notification_text_no_pages_due">No Pages Due Today</string>
+    <string name="search">Search For Page</string>
 </resources>
