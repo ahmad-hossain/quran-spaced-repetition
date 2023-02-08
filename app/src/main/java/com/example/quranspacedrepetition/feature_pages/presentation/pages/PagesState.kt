@@ -12,4 +12,5 @@ data class PagesState(
     val selectedGrade: Int = 5,
     val isSearchDialogVisible: Boolean = false,
     val searchQuery: String = "",
+    val searchQueryHasError: Boolean = false,
 )

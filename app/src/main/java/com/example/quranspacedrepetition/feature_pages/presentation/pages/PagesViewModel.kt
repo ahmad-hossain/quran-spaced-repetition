@@ -70,10 +70,20 @@ class PagesViewModel @Inject constructor(
             is NumberPickerValueChanged -> state = state.copy(selectedGrade = event.newValue)
             is GradeSelected -> state = state.copy(selectedGrade = event.grade)
             is SearchFabClicked -> state = state.copy(isSearchDialogVisible = true)
-            is SearchDialogConfirmed -> TODO()
-            is SearchDialogDismissed -> state = state.copy(isSearchDialogVisible = false, searchQuery = "")
-            is SearchQueryChanged -> state = state.copy(searchQuery = event.query)
+            is SearchDialogConfirmed -> {
+                // TODO handle out of bounds Page number
+                resetSearchDialog()
+            }
+            is SearchDialogDismissed -> resetSearchDialog()
+            is SearchQueryChanged -> {
+                val isValidNumber = Regex("\\d+").matches(event.query)
+                state = state.copy(searchQuery = event.query, searchQueryHasError = !isValidNumber)
+            }
         }
+    }
+
+    private fun resetSearchDialog() {
+        state = state.copy(isSearchDialogVisible = false, searchQuery = "")
     }
 
     init {
