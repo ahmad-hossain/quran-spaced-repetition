@@ -4,11 +4,13 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -40,6 +42,13 @@ fun PagesScreen(
     viewModel: PagesViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state
+    val lazyListState = rememberLazyListState()
+
+    LaunchedEffect(Unit) {
+        viewModel.scrollToPage.collect {
+            lazyListState.scrollToItem(it)
+        }
+    }
 
     if (state.isGradeDialogVisible) {
         GradePageDialog(
@@ -70,7 +79,8 @@ fun PagesScreen(
     ) { innerPadding ->
         LazyColumn(
             Modifier.padding(innerPadding),
-            contentPadding = PaddingValues(bottom = FabHeight + ScaffoldFabSpacing * 2)
+            contentPadding = PaddingValues(bottom = FabHeight + ScaffoldFabSpacing * 2),
+            state = lazyListState
         ) {
             item {
                 FilterChipsSection()

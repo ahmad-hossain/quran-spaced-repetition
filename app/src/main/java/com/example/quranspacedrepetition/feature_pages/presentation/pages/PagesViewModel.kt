@@ -12,6 +12,8 @@ import com.example.quranspacedrepetition.feature_pages.domain.use_case.UpdateRem
 import com.example.quranspacedrepetition.feature_pages.presentation.pages.PagesEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -29,6 +31,9 @@ class PagesViewModel @Inject constructor(
     var state by mutableStateOf(PagesState())
         private set
     private lateinit var lastClickedPage: Page
+
+    private val _scrollToPage = MutableSharedFlow<Int>()
+    val scrollToPage = _scrollToPage.asSharedFlow()
 
     fun onEvent(event: PagesEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
@@ -71,9 +76,13 @@ class PagesViewModel @Inject constructor(
             is GradeSelected -> state = state.copy(selectedGrade = event.grade)
             is SearchFabClicked -> state = state.copy(isSearchDialogVisible = true)
             is SearchDialogConfirmed -> {
-                // TODO handle out of bounds Page number
-                // TODO scroll to Page
+                val scrollToPage = state.searchQuery
+                    .toInt()
+                    .coerceIn(MIN_PAGE_NUMBER, MAX_PAGE_NUMBER)
                 resetSearchDialog()
+                viewModelScope.launch {
+                    _scrollToPage.emit(scrollToPage)
+                }
             }
             is SearchDialogDismissed -> resetSearchDialog()
             is SearchQueryChanged -> {
@@ -105,5 +114,10 @@ class PagesViewModel @Inject constructor(
                 allPages = it
             )
         }.launchIn(viewModelScope)
+    }
+
+    companion object {
+        const val MIN_PAGE_NUMBER = 1
+        const val MAX_PAGE_NUMBER = 611
     }
 }

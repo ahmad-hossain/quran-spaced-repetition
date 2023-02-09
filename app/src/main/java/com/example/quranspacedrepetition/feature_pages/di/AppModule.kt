@@ -21,6 +21,7 @@ import com.example.quranspacedrepetition.feature_pages.domain.model.Page
 import com.example.quranspacedrepetition.feature_pages.domain.receiver.AlarmReceiver
 import com.example.quranspacedrepetition.feature_pages.domain.repository.PageRepository
 import com.example.quranspacedrepetition.feature_pages.domain.use_case.UpdateReminderNotification
+import com.example.quranspacedrepetition.feature_pages.presentation.pages.PagesViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -50,7 +51,7 @@ object AppModule {
                 super.onCreate(db)
 
                 val defaultPage = Page(pageNumber = 0)
-                (1..611).forEach { pageNum ->
+                (PagesViewModel.MIN_PAGE_NUMBER..PagesViewModel.MAX_PAGE_NUMBER).forEach { pageNum ->
                     db.execSQL("INSERT INTO Page VALUES ($pageNum, ${defaultPage.interval}, ${defaultPage.repetitions}, ${defaultPage.eFactor}, ${defaultPage.dueDate})")
                 }
             }
