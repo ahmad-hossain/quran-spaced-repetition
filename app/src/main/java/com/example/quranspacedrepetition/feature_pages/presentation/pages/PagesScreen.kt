@@ -4,26 +4,22 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Error
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.quranspacedrepetition.R
 import com.example.quranspacedrepetition.feature_pages.presentation.components.GradePageDialog
 import com.example.quranspacedrepetition.feature_pages.presentation.components.PageItem
+import com.example.quranspacedrepetition.feature_pages.presentation.components.SearchDialog
 import com.example.quranspacedrepetition.feature_pages.presentation.components.TableCell
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -34,8 +30,7 @@ private val ScaffoldFabSpacing = 16.dp
 
 @OptIn(
     ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class,
-    ExperimentalComposeUiApi::class
+    ExperimentalFoundationApi::class
 )
 @RootNavGraph(start = true)
 @Destination
@@ -56,35 +51,12 @@ fun PagesScreen(
         )
     }
     if (state.isSearchDialogVisible) {
-        AlertDialog(
-            properties = DialogProperties(usePlatformDefaultWidth = false),
-            onDismissRequest = { viewModel.onEvent(PagesEvent.SearchDialogDismissed) },
-            confirmButton = {
-                TextButton(
-                    onClick = { viewModel.onEvent(PagesEvent.SearchDialogConfirmed) },
-                    enabled = !state.searchQueryHasError
-                ) {
-                    Text(text = stringResource(R.string.confirm))
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { viewModel.onEvent(PagesEvent.SearchDialogDismissed) }) {
-                    Text(text = stringResource(R.string.cancel))
-                }
-            },
-            icon = { Icon(imageVector = Icons.Outlined.Search, contentDescription = null) },
-            title = { Text(text = stringResource(R.string.search)) },
-            text = {
-                OutlinedTextField(
-                    value = state.searchQuery,
-                    onValueChange = { viewModel.onEvent(PagesEvent.SearchQueryChanged(it)) },
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                    singleLine = true,
-                    isError = state.searchQueryHasError,
-                    supportingText = if (state.searchQueryHasError) {{ Text(stringResource(R.string.invalid_number)) }} else null,
-                    trailingIcon = if (state.searchQueryHasError) {{ Icon(imageVector = Icons.Outlined.Error, contentDescription = null) }} else null,
-                )
-            }
+        SearchDialog(
+            searchQuery = state.searchQuery,
+            searchQueryHasError = state.searchQueryHasError,
+            onSearchQueryChanged = { viewModel.onEvent(PagesEvent.SearchQueryChanged(it)) },
+            onSearchDialogConfirmed = { viewModel.onEvent(PagesEvent.SearchDialogConfirmed) },
+            onSearchDialogDismissed = { viewModel.onEvent(PagesEvent.SearchDialogDismissed) },
         )
     }
 

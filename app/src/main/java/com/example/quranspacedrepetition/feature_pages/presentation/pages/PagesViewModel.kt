@@ -72,6 +72,7 @@ class PagesViewModel @Inject constructor(
             is SearchFabClicked -> state = state.copy(isSearchDialogVisible = true)
             is SearchDialogConfirmed -> {
                 // TODO handle out of bounds Page number
+                // TODO scroll to Page
                 resetSearchDialog()
             }
             is SearchDialogDismissed -> resetSearchDialog()
@@ -83,7 +84,11 @@ class PagesViewModel @Inject constructor(
     }
 
     private fun resetSearchDialog() {
-        state = state.copy(isSearchDialogVisible = false, searchQuery = "")
+        state = state.copy(
+            isSearchDialogVisible = false,
+            searchQuery = "",
+            searchQueryHasError = false
+        )
     }
 
     init {
