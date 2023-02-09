@@ -39,7 +39,7 @@ fun SearchDialog(
         confirmButton = {
             TextButton(
                 onClick = onSearchDialogConfirmed,
-                enabled = !searchQueryHasError
+                enabled = !searchQueryHasError && searchQuery.isNotEmpty()
             ) {
                 Text(text = stringResource(R.string.confirm))
             }
