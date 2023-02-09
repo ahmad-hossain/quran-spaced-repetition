@@ -71,6 +71,7 @@ fun PagesScreen(
     Scaffold(
         topBar = { CenterAlignedTopAppBar(title = { Text(stringResource(R.string.pages)) }) },
         floatingActionButton = {
+            if (state.displayedPages.isEmpty()) return@Scaffold
             FloatingActionButton(
                 onClick = { viewModel.onEvent(PagesEvent.SearchFabClicked) },
                 content = { Icon(imageVector = Icons.Outlined.Search, contentDescription = null) }
