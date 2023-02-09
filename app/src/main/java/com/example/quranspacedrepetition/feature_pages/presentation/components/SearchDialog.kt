@@ -50,7 +50,7 @@ fun SearchDialog(
             }
         },
         icon = { Icon(imageVector = Icons.Outlined.Search, contentDescription = null) },
-        title = { Text(text = stringResource(R.string.search)) },
+        title = { Text(text = stringResource(R.string.jump_to_page)) },
         text = {
             val focusRequester = remember { FocusRequester() }
             val keyboardController = LocalSoftwareKeyboardController.current
@@ -62,6 +62,7 @@ fun SearchDialog(
                 modifier = Modifier.focusRequester(focusRequester),
                 value = searchQuery,
                 onValueChange = onSearchQueryChanged,
+                label = { Text(text = stringResource(R.string.page_number)) },
                 keyboardOptions = KeyboardOptions.Default.copy(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
