@@ -45,7 +45,7 @@ fun PagesScreen(
     val lazyListState = rememberLazyListState()
 
     LaunchedEffect(Unit) {
-        viewModel.scrollToPage.collect {
+        viewModel.scrollToIndex.collect {
             // +2 to account for FilterChipSection and Spacer LazyColumn items
             lazyListState.scrollToItem(it + 2)
         }

@@ -32,8 +32,8 @@ class PagesViewModel @Inject constructor(
         private set
     private lateinit var lastClickedPage: Page
 
-    private val _scrollToPage = MutableSharedFlow<Int>()
-    val scrollToPage = _scrollToPage.asSharedFlow()
+    private val _scrollToIndex = MutableSharedFlow<Int>()
+    val scrollToIndex = _scrollToIndex.asSharedFlow()
 
     fun onEvent(event: PagesEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
@@ -83,7 +83,7 @@ class PagesViewModel @Inject constructor(
                         .indexOfFirst { it.pageNumber == queriedPageNum }
                         .takeUnless { it == -1 }
                         ?: queriedPageNum.coerceIn(0, state.displayedPages.lastIndex)
-                    _scrollToPage.emit(queriedPageIndex)
+                    _scrollToIndex.emit(queriedPageIndex)
                 }
             }
             is SearchDialogDismissed -> resetSearchDialog()
