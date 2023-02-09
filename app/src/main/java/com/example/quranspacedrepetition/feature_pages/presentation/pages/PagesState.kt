@@ -10,4 +10,7 @@ data class PagesState(
     val isAllChipSelected: Boolean = false,
     val isGradeDialogVisible: Boolean = false,
     val selectedGrade: Int = 5,
+    val isSearchDialogVisible: Boolean = false,
+    val searchQuery: String = "",
+    val searchQueryHasError: Boolean = false,
 )

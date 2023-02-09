@@ -3,7 +3,7 @@
     <string name="today">Today</string>
     <string name="all">All</string>
     <string name="pages">Pages</string>
-    <string name="page_number">Page No</string>
+    <string name="page_number_abbrev">Page No</string>
     <string name="interval">Interval</string>
     <string name="repetitions">Repetitions</string>
     <string name="due_date">Due Date</string>
@@ -20,4 +20,7 @@
     <string name="reminder_notification_title">Daily Quran Review Reminder</string>
     <string name="reminder_notification_text">%d Pages Left To Review Today</string>
     <string name="reminder_notification_text_no_pages_due">No Pages Due Today</string>
+    <string name="jump_to_page">Jump to Page</string>
+    <string name="invalid_number">Invalid Number</string>
+    <string name="page_number">Page Number</string>
 </resources>

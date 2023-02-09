@@ -12,6 +12,8 @@ import com.example.quranspacedrepetition.feature_pages.domain.use_case.UpdateRem
 import com.example.quranspacedrepetition.feature_pages.presentation.pages.PagesEvent.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -29,6 +31,9 @@ class PagesViewModel @Inject constructor(
     var state by mutableStateOf(PagesState())
         private set
     private lateinit var lastClickedPage: Page
+
+    private val _scrollToIndex = MutableSharedFlow<Int>()
+    val scrollToIndex = _scrollToIndex.asSharedFlow()
 
     fun onEvent(event: PagesEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
@@ -69,7 +74,32 @@ class PagesViewModel @Inject constructor(
             }
             is NumberPickerValueChanged -> state = state.copy(selectedGrade = event.newValue)
             is GradeSelected -> state = state.copy(selectedGrade = event.grade)
+            is SearchFabClicked -> state = state.copy(isSearchDialogVisible = true)
+            is SearchDialogConfirmed -> {
+                val queriedPageNum = state.searchQuery.toInt()
+                resetSearchDialog()
+                viewModelScope.launch {
+                    val queriedPageIndex = state.displayedPages
+                        .indexOfFirst { it.pageNumber == queriedPageNum }
+                        .takeUnless { it == -1 }
+                        ?: queriedPageNum.coerceIn(0, state.displayedPages.lastIndex)
+                    _scrollToIndex.emit(queriedPageIndex)
+                }
+            }
+            is SearchDialogDismissed -> resetSearchDialog()
+            is SearchQueryChanged -> {
+                val isValidNumber = Regex("\\d+").matches(event.query)
+                state = state.copy(searchQuery = event.query, searchQueryHasError = !isValidNumber)
+            }
         }
+    }
+
+    private fun resetSearchDialog() {
+        state = state.copy(
+            isSearchDialogVisible = false,
+            searchQuery = "",
+            searchQueryHasError = false
+        )
     }
 
     init {
@@ -86,5 +116,10 @@ class PagesViewModel @Inject constructor(
                 allPages = it
             )
         }.launchIn(viewModelScope)
+    }
+
+    companion object {
+        const val MIN_PAGE_NUMBER = 1
+        const val MAX_PAGE_NUMBER = 611
     }
 }

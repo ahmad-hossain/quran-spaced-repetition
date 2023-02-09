@@ -8,6 +8,10 @@ sealed class PagesEvent {
     object AllChipClicked : PagesEvent()
     object GradeDialogConfirmed : PagesEvent()
     object GradeDialogDismissed : PagesEvent()
+    object SearchFabClicked : PagesEvent()
+    object SearchDialogConfirmed : PagesEvent()
+    object SearchDialogDismissed : PagesEvent()
+    data class SearchQueryChanged(val query: String) : PagesEvent()
     data class NumberPickerValueChanged(val newValue: Int) : PagesEvent()
     data class GradeSelected(val grade: Int) : PagesEvent()
 }

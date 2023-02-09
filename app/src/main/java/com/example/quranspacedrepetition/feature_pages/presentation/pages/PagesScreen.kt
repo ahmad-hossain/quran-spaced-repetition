@@ -4,10 +4,13 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -18,12 +21,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.quranspacedrepetition.R
 import com.example.quranspacedrepetition.feature_pages.presentation.components.GradePageDialog
 import com.example.quranspacedrepetition.feature_pages.presentation.components.PageItem
+import com.example.quranspacedrepetition.feature_pages.presentation.components.SearchDialog
 import com.example.quranspacedrepetition.feature_pages.presentation.components.TableCell
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+private val FabHeight = 56.dp
+private val ScaffoldFabSpacing = 16.dp
+
+@OptIn(
+    ExperimentalMaterial3Api::class,
+    ExperimentalFoundationApi::class
+)
 @RootNavGraph(start = true)
 @Destination
 @Composable
@@ -32,6 +42,14 @@ fun PagesScreen(
     viewModel: PagesViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state
+    val lazyListState = rememberLazyListState()
+
+    LaunchedEffect(Unit) {
+        viewModel.scrollToIndex.collect {
+            // +2 to account for FilterChipSection and Spacer LazyColumn items
+            lazyListState.scrollToItem(it + 2)
+        }
+    }
 
     GradePageDialog(
         isVisible = state.isGradeDialogVisible,
@@ -41,11 +59,30 @@ fun PagesScreen(
         selectedGrade = state.selectedGrade,
         onSelectGrade = { viewModel.onEvent(PagesEvent.GradeSelected(it)) },
     )
+    SearchDialog(
+        isVisible = state.isSearchDialogVisible,
+        searchQuery = state.searchQuery,
+        searchQueryHasError = state.searchQueryHasError,
+        onSearchQueryChanged = { viewModel.onEvent(PagesEvent.SearchQueryChanged(it)) },
+        onSearchDialogConfirmed = { viewModel.onEvent(PagesEvent.SearchDialogConfirmed) },
+        onSearchDialogDismissed = { viewModel.onEvent(PagesEvent.SearchDialogDismissed) },
+    )
 
     Scaffold(
-        topBar = { CenterAlignedTopAppBar(title = { Text(stringResource(R.string.pages)) }) }
+        topBar = { CenterAlignedTopAppBar(title = { Text(stringResource(R.string.pages)) }) },
+        floatingActionButton = {
+            if (state.displayedPages.isEmpty()) return@Scaffold
+            FloatingActionButton(
+                onClick = { viewModel.onEvent(PagesEvent.SearchFabClicked) },
+                content = { Icon(imageVector = Icons.Outlined.Search, contentDescription = null) }
+            )
+        },
     ) { innerPadding ->
-        LazyColumn(Modifier.padding(innerPadding)) {
+        LazyColumn(
+            Modifier.padding(innerPadding),
+            contentPadding = PaddingValues(bottom = FabHeight + ScaffoldFabSpacing * 2),
+            state = lazyListState
+        ) {
             item {
                 FilterChipsSection()
             }
@@ -125,7 +162,7 @@ private fun FilterChipsSection(
 private fun TableHeader() {
     val bold = FontWeight.Bold
     Row(Modifier.background(MaterialTheme.colorScheme.background)) {
-        TableCell(fontWeight = bold, text = stringResource(R.string.page_number), weight = 1f)
+        TableCell(fontWeight = bold, text = stringResource(R.string.page_number_abbrev), weight = 1f)
         TableCell(fontWeight = bold, text = stringResource(R.string.interval), weight = 1f)
         TableCell(fontWeight = bold, text = stringResource(R.string.repetitions), weight = 1f)
         TableCell(fontWeight = bold, text = stringResource(R.string.due_date), weight = 1f)

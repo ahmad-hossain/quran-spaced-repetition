@@ -108,6 +108,7 @@ fun GradePageDialog(
 @Composable
 fun PreviewGradingDialog() {
     GradePageDialog(
+        isVisible = true,
         onDismissRequest = {},
         onConfirm = {},
         onDismiss = {},
