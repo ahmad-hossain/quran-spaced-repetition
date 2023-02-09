@@ -76,12 +76,14 @@ class PagesViewModel @Inject constructor(
             is GradeSelected -> state = state.copy(selectedGrade = event.grade)
             is SearchFabClicked -> state = state.copy(isSearchDialogVisible = true)
             is SearchDialogConfirmed -> {
-                val scrollToPage = state.searchQuery
-                    .toInt()
-                    .coerceIn(MIN_PAGE_NUMBER, MAX_PAGE_NUMBER)
+                val queriedPageNum = state.searchQuery.toInt()
+                val queriedPageIndex = state.displayedPages
+                    .indexOfFirst { it.pageNumber == queriedPageNum }
+                    .takeUnless { it == -1 }
+                    ?: queriedPageNum.coerceIn(0, state.displayedPages.lastIndex)
                 resetSearchDialog()
                 viewModelScope.launch {
-                    _scrollToPage.emit(scrollToPage)
+                    _scrollToPage.emit(queriedPageIndex)
                 }
             }
             is SearchDialogDismissed -> resetSearchDialog()
