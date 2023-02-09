@@ -25,12 +25,14 @@ data class GradeOption(
 @Composable
 fun GradePageDialog(
     modifier: Modifier = Modifier,
+    isVisible: Boolean,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
     selectedGrade: Int,
     onSelectGrade: (Int) -> Unit,
 ) {
+    if (!isVisible) return
     val gradeOptions = listOf(
         GradeOption(
             grade = 5,

@@ -33,15 +33,14 @@ fun PagesScreen(
 ) {
     val state = viewModel.state
 
-    if (state.isGradeDialogVisible) {
-        GradePageDialog(
-            onDismissRequest = { viewModel.onEvent(PagesEvent.GradeDialogDismissed) },
-            onConfirm = { viewModel.onEvent(PagesEvent.GradeDialogConfirmed) },
-            onDismiss = { viewModel.onEvent(PagesEvent.GradeDialogDismissed) },
-            selectedGrade = state.selectedGrade,
-            onSelectGrade = { viewModel.onEvent(PagesEvent.GradeSelected(it)) },
-        )
-    }
+    GradePageDialog(
+        isVisible = state.isGradeDialogVisible,
+        onDismissRequest = { viewModel.onEvent(PagesEvent.GradeDialogDismissed) },
+        onConfirm = { viewModel.onEvent(PagesEvent.GradeDialogConfirmed) },
+        onDismiss = { viewModel.onEvent(PagesEvent.GradeDialogDismissed) },
+        selectedGrade = state.selectedGrade,
+        onSelectGrade = { viewModel.onEvent(PagesEvent.GradeSelected(it)) },
+    )
 
     Scaffold(
         topBar = { CenterAlignedTopAppBar(title = { Text(stringResource(R.string.pages)) }) }
