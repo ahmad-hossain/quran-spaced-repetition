@@ -50,15 +50,14 @@ fun PagesScreen(
             onSelectGrade = { viewModel.onEvent(PagesEvent.GradeSelected(it)) },
         )
     }
-    if (state.isSearchDialogVisible) {
-        SearchDialog(
-            searchQuery = state.searchQuery,
-            searchQueryHasError = state.searchQueryHasError,
-            onSearchQueryChanged = { viewModel.onEvent(PagesEvent.SearchQueryChanged(it)) },
-            onSearchDialogConfirmed = { viewModel.onEvent(PagesEvent.SearchDialogConfirmed) },
-            onSearchDialogDismissed = { viewModel.onEvent(PagesEvent.SearchDialogDismissed) },
-        )
-    }
+    SearchDialog(
+        isVisible = state.isSearchDialogVisible,
+        searchQuery = state.searchQuery,
+        searchQueryHasError = state.searchQueryHasError,
+        onSearchQueryChanged = { viewModel.onEvent(PagesEvent.SearchQueryChanged(it)) },
+        onSearchDialogConfirmed = { viewModel.onEvent(PagesEvent.SearchDialogConfirmed) },
+        onSearchDialogDismissed = { viewModel.onEvent(PagesEvent.SearchDialogDismissed) },
+    )
 
     Scaffold(
         topBar = { CenterAlignedTopAppBar(title = { Text(stringResource(R.string.pages)) }) },

@@ -23,13 +23,17 @@ import com.example.quranspacedrepetition.R
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun SearchDialog(
+    modifier: Modifier = Modifier,
+    isVisible: Boolean,
     searchQuery: String,
     searchQueryHasError: Boolean,
     onSearchQueryChanged: (String) -> Unit,
     onSearchDialogConfirmed: () -> Unit,
     onSearchDialogDismissed: () -> Unit,
 ) {
+    if (!isVisible) return
     AlertDialog(
+        modifier = modifier,
         properties = DialogProperties(usePlatformDefaultWidth = false),
         onDismissRequest = onSearchDialogDismissed,
         confirmButton = {
