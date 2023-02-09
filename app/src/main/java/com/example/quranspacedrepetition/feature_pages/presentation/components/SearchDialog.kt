@@ -68,7 +68,11 @@ fun SearchDialog(
                     imeAction = ImeAction.Done
                 ),
                 keyboardActions = KeyboardActions(
-                    onDone = { keyboardController?.hide() }
+                    onDone = {
+                        keyboardController?.hide()
+                        if (!searchQueryHasError && searchQuery.isNotEmpty())
+                            onSearchDialogConfirmed()
+                    }
                 ),
                 singleLine = true,
                 isError = searchQueryHasError,
