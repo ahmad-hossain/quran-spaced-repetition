@@ -1,9 +1,8 @@
 package com.example.quranspacedrepetition.feature_pages.presentation.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
@@ -22,7 +21,7 @@ fun GradePageDialogOption(
     description: String,
 ) {
     Row(
-        modifier,
+        modifier.clickable { onSelect() },
         verticalAlignment = Alignment.CenterVertically
     ) {
         RadioButton(

@@ -1,9 +1,6 @@
 package com.example.quranspacedrepetition.feature_pages.presentation.components
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.requiredHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -90,6 +87,7 @@ fun GradePageDialog(
                         if (index != 0)
                             Spacer(Modifier.height(6.dp))
                         GradePageDialogOption(
+                            modifier = Modifier.fillMaxWidth(),
                             selected = selectedGrade == gradeOption.grade,
                             onSelect = { gradeOption.onSelectGrade(gradeOption.grade) },
                             grade = gradeOption.grade,
