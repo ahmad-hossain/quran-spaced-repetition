@@ -13,24 +13,31 @@ import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.quranspacedrepetition.R
-import com.example.quranspacedrepetition.feature_pages.presentation.components.GradePageDialog
-import com.example.quranspacedrepetition.feature_pages.presentation.components.PageItem
-import com.example.quranspacedrepetition.feature_pages.presentation.components.SearchDialog
-import com.example.quranspacedrepetition.feature_pages.presentation.components.TableCell
+import com.example.quranspacedrepetition.feature_pages.presentation.components.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlin.math.roundToInt
 
 private val FabHeight = 56.dp
 private val ScaffoldFabSpacing = 16.dp
+val BottomBarHeight = 80.dp
 
 @OptIn(
     ExperimentalMaterial3Api::class,
@@ -70,17 +77,40 @@ fun PagesScreen(
     )
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val bottomBarHeightPx = with(LocalDensity.current) { BottomBarHeight.roundToPx().toFloat() }
+    val bottomBarOffsetHeightPx = remember { mutableStateOf(0f) }
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                val deltaY = available.y
+                val newOffset = bottomBarOffsetHeightPx.value + deltaY
+                bottomBarOffsetHeightPx.value = newOffset.coerceIn(-bottomBarHeightPx, 0f)
+
+                return Offset.Zero
+            }
+        }
+    }
     Scaffold(
-        modifier = Modifier.nestedScroll(scrollBehavior.nestedScrollConnection),
+        modifier = Modifier
+            .nestedScroll(nestedScrollConnection)
+            .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.revision)) },
                 scrollBehavior = scrollBehavior
             )
         },
+        bottomBar = {
+            CustomBottomBar(
+                modifier = Modifier.offset { IntOffset(x = 0, y = -bottomBarOffsetHeightPx.value.roundToInt()) },
+                currentScreen = Screen.Home,
+                onSettingsClicked = { /**TODO*/ },
+            )
+        },
         floatingActionButton = {
             if (state.displayedPages.isEmpty()) return@Scaffold
             FloatingActionButton(
+                modifier = Modifier.offset { IntOffset(x = 0, y = -bottomBarOffsetHeightPx.value.roundToInt()) },
                 onClick = { viewModel.onEvent(PagesEvent.SearchFabClicked) },
                 content = { Icon(imageVector = Icons.Outlined.Search, contentDescription = null) }
             )
@@ -89,7 +119,13 @@ fun PagesScreen(
         Column(
             Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(
+                    PaddingValues(
+                        top = innerPadding.calculateTopPadding(),
+                        start = innerPadding.calculateStartPadding(LayoutDirection.Ltr),
+                        end = innerPadding.calculateEndPadding(LayoutDirection.Ltr)
+                    )
+                )
         ) {
             TabRow(
                 selectedTabIndex = if (state.isTodayChipSelected) 0 else 1,
@@ -115,7 +151,7 @@ fun PagesScreen(
                 )
             }
             LazyColumn(
-                contentPadding = PaddingValues(bottom = FabHeight + ScaffoldFabSpacing * 2),
+                contentPadding = PaddingValues(bottom = BottomBarHeight + FabHeight + ScaffoldFabSpacing * 2),
                 state = lazyListState
             ) {
                 stickyHeader {
