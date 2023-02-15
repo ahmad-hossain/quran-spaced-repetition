@@ -23,4 +23,5 @@
     <string name="jump_to_page">Jump to Page</string>
     <string name="invalid_number">Invalid Number</string>
     <string name="page_number">Page Number</string>
+    <string name="revision">Revision</string>
 </resources>
