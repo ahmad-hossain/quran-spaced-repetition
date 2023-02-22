@@ -31,9 +31,12 @@ class PagesViewModel @Inject constructor(
     var state by mutableStateOf(PagesState())
         private set
     private lateinit var lastClickedPage: Page
+    private var currentTabIndex = DEFAULT_TAB_INDEX
 
     private val _scrollToIndex = MutableSharedFlow<Int>()
     val scrollToIndex = _scrollToIndex.asSharedFlow()
+    private val _scrollToTab = MutableSharedFlow<Int>()
+    val scrollToTab = _scrollToTab.asSharedFlow()
 
     fun onEvent(event: PagesEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
@@ -43,19 +46,10 @@ class PagesViewModel @Inject constructor(
                 state = state.copy(isGradeDialogVisible = true)
                 lastClickedPage = event.page
             }
-            is TodayChipClicked -> {
-                state = state.copy(
-                    displayedPages = state.pagesDueToday,
-                    isTodayChipSelected = true,
-                    isAllChipSelected = false
-                )
-            }
-            is AllChipClicked -> {
-                state = state.copy(
-                    displayedPages = state.allPages,
-                    isTodayChipSelected = false,
-                    isAllChipSelected = true
-                )
+            is TabScrolled -> currentTabIndex = event.tabIndex
+            is TabClicked -> {
+                currentTabIndex = event.tabIndex
+                viewModelScope.launch { _scrollToTab.emit(event.tabIndex) }
             }
             is GradeDialogDismissed -> state = state.copy(isGradeDialogVisible = false, selectedGrade = 5)
             is GradeDialogConfirmed -> {
@@ -80,10 +74,10 @@ class PagesViewModel @Inject constructor(
                 val queriedPageNum = state.searchQuery.toInt()
                 resetSearchDialog()
                 viewModelScope.launch {
-                    val queriedPageIndex = state.displayedPages
+                    val queriedPageIndex = getDisplayedPages()
                         .indexOfFirst { it.pageNumber == queriedPageNum }
                         .takeUnless { it == -1 }
-                        ?: queriedPageNum.coerceIn(0, state.displayedPages.lastIndex)
+                        ?: queriedPageNum.coerceIn(0, getDisplayedPages().lastIndex)
                     _scrollToIndex.emit(queriedPageIndex)
                 }
             }
@@ -103,24 +97,28 @@ class PagesViewModel @Inject constructor(
         )
     }
 
+    fun getDisplayedPages(forTabIndex: Int = currentTabIndex): List<Page> {
+        Timber.d("getDisplayedPages(): forTabIndex=$forTabIndex")
+        return when (forTabIndex) {
+            Tabs.TODAY.ordinal -> state.pagesDueToday
+            Tabs.ALL.ordinal -> state.allPages
+            else -> emptyList()
+        }
+    }
+
     init {
         repository.getPagesDueToday().onEach {
-            state = state.copy(
-                displayedPages = if (state.isTodayChipSelected) it else state.displayedPages,
-                pagesDueToday = it
-            )
+            state = state.copy(pagesDueToday = it)
         }.launchIn(viewModelScope)
 
         repository.getPages().onEach {
-            state = state.copy(
-                displayedPages = if (state.isAllChipSelected) it else state.displayedPages,
-                allPages = it
-            )
+            state = state.copy(allPages = it)
         }.launchIn(viewModelScope)
     }
 
     companion object {
         const val MIN_PAGE_NUMBER = 1
         const val MAX_PAGE_NUMBER = 611
+        const val DEFAULT_TAB_INDEX = 0
     }
 }

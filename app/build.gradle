@@ -106,6 +106,9 @@ dependencies {
 
     // Splash Screen Compat
     implementation 'androidx.core:core-splashscreen:1.0.0'
+
+    // Accompanist Pagers
+    implementation 'com.google.accompanist:accompanist-pager:0.29.1-alpha'
 }
 
 // Allow references to generated code

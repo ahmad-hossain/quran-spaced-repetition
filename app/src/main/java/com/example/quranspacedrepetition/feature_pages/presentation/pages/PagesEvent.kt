@@ -4,8 +4,8 @@ import com.example.quranspacedrepetition.feature_pages.domain.model.Page
 
 sealed class PagesEvent {
     data class PageClicked(val page: Page) : PagesEvent()
-    object TodayChipClicked : PagesEvent()
-    object AllChipClicked : PagesEvent()
+    data class TabClicked(val tabIndex: Int) : PagesEvent()
+    data class TabScrolled(val tabIndex: Int) : PagesEvent()
     object GradeDialogConfirmed : PagesEvent()
     object GradeDialogDismissed : PagesEvent()
     object SearchFabClicked : PagesEvent()
