@@ -36,6 +36,10 @@ private val FabHeight = 56.dp
 private val ScaffoldFabSpacing = 16.dp
 val BottomBarHeight = 80.dp
 
+enum class UiTabs {
+    TODAY, ALL
+}
+
 @OptIn(
     ExperimentalMaterial3Api::class,
     ExperimentalFoundationApi::class
@@ -125,10 +129,8 @@ fun PagesScreen(
                 )
         ) {
             TabsSection(
-                isTodayChipSelected = state.isTodayChipSelected,
-                isAllChipSelected = state.isAllChipSelected,
-                onTodayChipClicked = { viewModel.onEvent(PagesEvent.TodayChipClicked) },
-                onAllChipClicked = { viewModel.onEvent(PagesEvent.AllChipClicked) }
+                selectedTab = state.selectedTab,
+                onTabClicked = { viewModel.onEvent(PagesEvent.TabClicked(it)) }
             )
             LazyColumn(
                 contentPadding = PaddingValues(bottom = BottomBarHeight + FabHeight + ScaffoldFabSpacing * 2),
@@ -151,17 +153,15 @@ fun PagesScreen(
 
 @Composable
 private fun TabsSection(
-    isTodayChipSelected: Boolean,
-    isAllChipSelected: Boolean,
-    onTodayChipClicked: () -> Unit,
-    onAllChipClicked: () -> Unit
+    selectedTab: UiTabs,
+    onTabClicked: (UiTabs) -> Unit
 ) {
     TabRow(
-        selectedTabIndex = if (isTodayChipSelected) 0 else 1,
+        selectedTabIndex = selectedTab.ordinal,
     ) {
         Tab(
-            selected = isTodayChipSelected,
-            onClick = onTodayChipClicked,
+            selected = selectedTab == UiTabs.TODAY,
+            onClick = { onTabClicked(UiTabs.TODAY) },
             text = {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -174,8 +174,8 @@ private fun TabsSection(
             },
         )
         Tab(
-            selected = isAllChipSelected,
-            onClick = onAllChipClicked,
+            selected = selectedTab == UiTabs.ALL,
+            onClick = { onTabClicked(UiTabs.ALL) },
             text = { Text(text = stringResource(R.string.all)) },
         )
     }

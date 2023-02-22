@@ -43,19 +43,17 @@ class PagesViewModel @Inject constructor(
                 state = state.copy(isGradeDialogVisible = true)
                 lastClickedPage = event.page
             }
-            is TodayChipClicked -> {
-                state = state.copy(
-                    displayedPages = state.pagesDueToday,
-                    isTodayChipSelected = true,
-                    isAllChipSelected = false
-                )
-            }
-            is AllChipClicked -> {
-                state = state.copy(
-                    displayedPages = state.allPages,
-                    isTodayChipSelected = false,
-                    isAllChipSelected = true
-                )
+            is TabClicked -> {
+                when (event.tab) {
+                    UiTabs.TODAY -> state = state.copy(
+                        selectedTab = event.tab,
+                        displayedPages = state.pagesDueToday
+                    )
+                    UiTabs.ALL -> state = state.copy(
+                        selectedTab = event.tab,
+                        displayedPages = state.allPages
+                    )
+                }
             }
             is GradeDialogDismissed -> state = state.copy(isGradeDialogVisible = false, selectedGrade = 5)
             is GradeDialogConfirmed -> {
@@ -106,14 +104,14 @@ class PagesViewModel @Inject constructor(
     init {
         repository.getPagesDueToday().onEach {
             state = state.copy(
-                displayedPages = if (state.isTodayChipSelected) it else state.displayedPages,
+                displayedPages = if (state.selectedTab == UiTabs.TODAY) it else state.displayedPages,
                 pagesDueToday = it
             )
         }.launchIn(viewModelScope)
 
         repository.getPages().onEach {
             state = state.copy(
-                displayedPages = if (state.isAllChipSelected) it else state.displayedPages,
+                displayedPages = if (state.selectedTab == UiTabs.ALL) it else state.displayedPages,
                 allPages = it
             )
         }.launchIn(viewModelScope)
