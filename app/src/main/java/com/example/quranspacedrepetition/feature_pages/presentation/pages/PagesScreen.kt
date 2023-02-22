@@ -11,10 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -127,29 +124,12 @@ fun PagesScreen(
                     )
                 )
         ) {
-            TabRow(
-                selectedTabIndex = if (state.isTodayChipSelected) 0 else 1,
-            ) {
-                Tab(
-                    selected = state.isTodayChipSelected,
-                    onClick = { viewModel.onEvent(PagesEvent.TodayChipClicked) },
-                    text = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Icon(imageVector = Icons.Outlined.Today, contentDescription = null)
-                            Spacer(Modifier.width(8.dp))
-                            Text(text = stringResource(R.string.today))
-                        }
-                    },
-                )
-                Tab(
-                    selected = state.isAllChipSelected,
-                    onClick = { viewModel.onEvent(PagesEvent.AllChipClicked) },
-                    text = { Text(text = stringResource(R.string.all)) },
-                )
-            }
+            TabsSection(
+                isTodayChipSelected = state.isTodayChipSelected,
+                isAllChipSelected = state.isAllChipSelected,
+                onTodayChipClicked = { viewModel.onEvent(PagesEvent.TodayChipClicked) },
+                onAllChipClicked = { viewModel.onEvent(PagesEvent.AllChipClicked) }
+            )
             LazyColumn(
                 contentPadding = PaddingValues(bottom = BottomBarHeight + FabHeight + ScaffoldFabSpacing * 2),
                 state = lazyListState
@@ -166,6 +146,38 @@ fun PagesScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun TabsSection(
+    isTodayChipSelected: Boolean,
+    isAllChipSelected: Boolean,
+    onTodayChipClicked: () -> Unit,
+    onAllChipClicked: () -> Unit
+) {
+    TabRow(
+        selectedTabIndex = if (isTodayChipSelected) 0 else 1,
+    ) {
+        Tab(
+            selected = isTodayChipSelected,
+            onClick = onTodayChipClicked,
+            text = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(imageVector = Icons.Outlined.Today, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text(text = stringResource(R.string.today))
+                }
+            },
+        )
+        Tab(
+            selected = isAllChipSelected,
+            onClick = onAllChipClicked,
+            text = { Text(text = stringResource(R.string.all)) },
+        )
     }
 }
 
