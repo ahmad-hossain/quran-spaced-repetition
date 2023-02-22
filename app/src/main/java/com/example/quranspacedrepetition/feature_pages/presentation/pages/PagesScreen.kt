@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.quranspacedrepetition.R
+import com.example.quranspacedrepetition.destinations.SettingsScreenDestination
 import com.example.quranspacedrepetition.feature_pages.presentation.components.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
@@ -105,7 +106,7 @@ fun PagesScreen(
             CustomBottomBar(
                 modifier = Modifier.offset { IntOffset(x = 0, y = -bottomBarOffsetHeightPx.value.roundToInt()) },
                 currentScreen = Screen.Home,
-                onSettingsClicked = { /**TODO*/ },
+                onSettingsClicked = { navigator.navigate(SettingsScreenDestination) },
             )
         },
         floatingActionButton = {
