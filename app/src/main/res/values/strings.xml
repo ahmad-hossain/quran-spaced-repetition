@@ -24,4 +24,6 @@
     <string name="invalid_number">Invalid Number</string>
     <string name="page_number">Page Number</string>
     <string name="revision">Revision</string>
+    <string name="navigate_back">Navigate Back</string>
+    <string name="settings">Settings</string>
 </resources>
