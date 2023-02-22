@@ -11,10 +11,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Today
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -38,6 +35,10 @@ import kotlin.math.roundToInt
 private val FabHeight = 56.dp
 private val ScaffoldFabSpacing = 16.dp
 val BottomBarHeight = 80.dp
+
+enum class UiTabs {
+    TODAY, ALL
+}
 
 @OptIn(
     ExperimentalMaterial3Api::class,
@@ -127,29 +128,10 @@ fun PagesScreen(
                     )
                 )
         ) {
-            TabRow(
-                selectedTabIndex = if (state.isTodayChipSelected) 0 else 1,
-            ) {
-                Tab(
-                    selected = state.isTodayChipSelected,
-                    onClick = { viewModel.onEvent(PagesEvent.TodayChipClicked) },
-                    text = {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center
-                        ) {
-                            Icon(imageVector = Icons.Outlined.Today, contentDescription = null)
-                            Spacer(Modifier.width(8.dp))
-                            Text(text = stringResource(R.string.today))
-                        }
-                    },
-                )
-                Tab(
-                    selected = state.isAllChipSelected,
-                    onClick = { viewModel.onEvent(PagesEvent.AllChipClicked) },
-                    text = { Text(text = stringResource(R.string.all)) },
-                )
-            }
+            TabsSection(
+                selectedTab = state.selectedTab,
+                onTabClicked = { viewModel.onEvent(PagesEvent.TabClicked(it)) }
+            )
             LazyColumn(
                 contentPadding = PaddingValues(bottom = BottomBarHeight + FabHeight + ScaffoldFabSpacing * 2),
                 state = lazyListState
@@ -166,6 +148,36 @@ fun PagesScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun TabsSection(
+    selectedTab: UiTabs,
+    onTabClicked: (UiTabs) -> Unit
+) {
+    TabRow(
+        selectedTabIndex = selectedTab.ordinal,
+    ) {
+        Tab(
+            selected = selectedTab == UiTabs.TODAY,
+            onClick = { onTabClicked(UiTabs.TODAY) },
+            text = {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(imageVector = Icons.Outlined.Today, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
+                    Text(text = stringResource(R.string.today))
+                }
+            },
+        )
+        Tab(
+            selected = selectedTab == UiTabs.ALL,
+            onClick = { onTabClicked(UiTabs.ALL) },
+            text = { Text(text = stringResource(R.string.all)) },
+        )
     }
 }
 
