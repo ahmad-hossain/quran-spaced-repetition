@@ -6,8 +6,8 @@ import java.time.LocalTime
 
 @Serializable
 data class UserPreferences(
-    val startPage: Int = 0,
-    val endPage: Int = 0,
+    val startPage: Int = 1,
+    val endPage: Int = 611,
     @Serializable(with = LocalTimeSerializer::class)
     val notificationTime: LocalTime = LocalTime.of(0, 0)
 )
