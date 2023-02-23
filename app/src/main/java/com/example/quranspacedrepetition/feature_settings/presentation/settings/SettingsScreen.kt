@@ -14,6 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.quranspacedrepetition.R
 import com.example.quranspacedrepetition.feature_pages.presentation.components.CustomBottomBar
 import com.example.quranspacedrepetition.feature_pages.presentation.components.Screen
+import com.marosseleng.compose.material3.datetimepickers.time.ui.dialog.TimePickerDialog
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import java.time.format.DateTimeFormatter
@@ -26,6 +27,15 @@ fun SettingsScreen(
     navigator: DestinationsNavigator,
 ) {
     val state = viewModel.state
+
+    if (state.isTimePickerVisible) {
+        TimePickerDialog(
+            title = { Text(stringResource(R.string.select_time)) },
+            initialTime = state.userPreferences.notificationTime,
+            onDismissRequest = { viewModel.onEvent(SettingsEvent.TimePickerDismissed) },
+            onTimeChange = { viewModel.onEvent(SettingsEvent.TimePickerTimeChanged(it)) }
+        )
+    }
 
     Scaffold(
         topBar = {

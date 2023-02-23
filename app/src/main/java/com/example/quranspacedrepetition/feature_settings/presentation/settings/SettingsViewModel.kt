@@ -28,8 +28,16 @@ class SettingsViewModel @Inject constructor(
         Timber.d("%s : %s", event::class.simpleName, event.toString())
 
         when (event) {
-            is SettingsEvent.NotificationTimeSettingClicked -> TODO()
+            is SettingsEvent.NotificationTimeSettingClicked -> state = state.copy(isTimePickerVisible = true)
             is SettingsEvent.PageNumberSettingClicked -> TODO()
+            is SettingsEvent.TimePickerTimeChanged -> {
+                state = state.copy(isTimePickerVisible = false)
+                viewModelScope.launch {
+                    settingsRepository.updateDatastore(state.userPreferences.copy(notificationTime = event.time))
+                }
+                // todo : update alarm manager
+            }
+            is SettingsEvent.TimePickerDismissed -> state = state.copy(isTimePickerVisible = false)
         }
     }
 
