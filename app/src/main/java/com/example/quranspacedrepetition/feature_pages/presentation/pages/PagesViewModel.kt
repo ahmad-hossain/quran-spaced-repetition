@@ -116,9 +116,4 @@ class PagesViewModel @Inject constructor(
             )
         }.launchIn(viewModelScope)
     }
-
-    companion object {
-        const val MIN_PAGE_NUMBER = 1
-        const val MAX_PAGE_NUMBER = 611
-    }
 }
