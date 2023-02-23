@@ -60,7 +60,7 @@ fun SettingsScreen(
                     DateTimeFormatter.ofPattern("hh:mm a"))) }
             )
             ListItem(
-                modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.NotificationTimeSettingClicked) },
+                modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.PageNumberSettingClicked) },
                 headlineText = { Text(stringResource(R.string.quran_pages_setting)) },
                 supportingText = { Text("${state.userPreferences.startPage} - ${state.userPreferences.endPage}") }
             )
