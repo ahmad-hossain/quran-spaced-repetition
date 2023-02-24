@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.quranspacedrepetition.common.use_case.ScheduleNotificationAlarm
 import com.example.quranspacedrepetition.feature_settings.domain.model.UserPreferences
 import com.example.quranspacedrepetition.feature_settings.domain.repository.SettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class SettingsViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
     dataStore: DataStore<UserPreferences>,
+    private val scheduleNotificationAlarmUseCase: ScheduleNotificationAlarm,
 ) : ViewModel() {
 
     var state by mutableStateOf(SettingsState())
@@ -35,7 +37,7 @@ class SettingsViewModel @Inject constructor(
                 viewModelScope.launch {
                     settingsRepository.updateDatastore(state.userPreferences.copy(notificationTime = event.time))
                 }
-                // todo : update alarm manager
+                scheduleNotificationAlarmUseCase()
             }
             is SettingsEvent.TimePickerDismissed -> state = state.copy(isTimePickerVisible = false)
         }

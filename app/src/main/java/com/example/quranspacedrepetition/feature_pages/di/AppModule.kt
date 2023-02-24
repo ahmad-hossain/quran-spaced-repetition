@@ -10,6 +10,8 @@ import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -21,6 +23,7 @@ import com.example.quranspacedrepetition.feature_pages.domain.model.Page
 import com.example.quranspacedrepetition.feature_pages.domain.receiver.AlarmReceiver
 import com.example.quranspacedrepetition.feature_pages.domain.repository.PageRepository
 import com.example.quranspacedrepetition.feature_pages.domain.use_case.UpdateReminderNotification
+import com.example.quranspacedrepetition.feature_settings.data.data_source.UserPreferencesSerializer
 import com.example.quranspacedrepetition.feature_settings.domain.model.UserPreferences
 import dagger.Module
 import dagger.Provides
@@ -95,5 +98,15 @@ object AppModule {
             false -> PendingIntent.FLAG_UPDATE_CURRENT
         }
         return PendingIntent.getBroadcast(context, 0, intent, flags)
+    }
+
+    private val Context.dataStore: DataStore<UserPreferences> by dataStore(
+        fileName = "user-prefs.json",
+        serializer = UserPreferencesSerializer
+    )
+
+    @Provides
+    fun provideDataStore(appContext: Application): DataStore<UserPreferences> {
+        return appContext.dataStore
     }
 }

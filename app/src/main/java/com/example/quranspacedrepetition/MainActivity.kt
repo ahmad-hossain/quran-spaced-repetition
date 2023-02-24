@@ -11,8 +11,8 @@ import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.example.quranspacedrepetition.feature_pages.domain.use_case.ScheduleNotificationAlarm
 import com.example.quranspacedrepetition.feature_pages.domain.use_case.UpdateReminderNotification
+import com.example.quranspacedrepetition.common.use_case.ScheduleNotificationAlarm
 import com.example.quranspacedrepetition.feature_pages.presentation.pages.PagesViewModel
 import com.example.quranspacedrepetition.ui.theme.QuranSpacedRepetitionTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
