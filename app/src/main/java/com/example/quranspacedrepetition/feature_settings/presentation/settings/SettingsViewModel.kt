@@ -36,8 +36,8 @@ class SettingsViewModel @Inject constructor(
                 state = state.copy(isTimePickerVisible = false)
                 viewModelScope.launch {
                     settingsRepository.updateDatastore(state.userPreferences.copy(notificationTime = event.time))
+                    scheduleNotificationAlarmUseCase()
                 }
-                scheduleNotificationAlarmUseCase()
             }
             is SettingsEvent.TimePickerDismissed -> state = state.copy(isTimePickerVisible = false)
         }

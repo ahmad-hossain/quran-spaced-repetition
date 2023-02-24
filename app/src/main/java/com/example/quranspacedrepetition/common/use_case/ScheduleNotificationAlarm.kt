@@ -14,6 +14,7 @@ import com.example.quranspacedrepetition.feature_settings.domain.model.UserPrefe
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
+import java.time.LocalTime
 import java.util.*
 import javax.inject.Inject
 
@@ -34,13 +35,16 @@ class ScheduleNotificationAlarm @Inject constructor(
         }
 
         val notificationTimePref = dataStore.data.first().notificationTime
-        Timber.d("invoke: notificationTimePref=$notificationTimePref")
+
+        val shouldScheduleToday = LocalTime.now().isBefore(notificationTimePref)
+        val dateOffset = if (shouldScheduleToday) 0 else 1
+        Timber.d("invoke: notificationTimePref=$notificationTimePref. shouldScheduleToday=$shouldScheduleToday")
 
         val calendar = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, notificationTimePref.hour)
             set(Calendar.MINUTE, notificationTimePref.minute)
             set(Calendar.SECOND, 0)
-            add(Calendar.DATE, 1)
+            add(Calendar.DATE, dateOffset)
         }
 
         alarmManager.setExact(
