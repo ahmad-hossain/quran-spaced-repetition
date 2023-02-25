@@ -14,6 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.quranspacedrepetition.R
 import com.example.quranspacedrepetition.feature_pages.presentation.components.CustomBottomBar
 import com.example.quranspacedrepetition.feature_pages.presentation.components.Screen
+import com.example.quranspacedrepetition.feature_settings.presentation.settings.components.EditPageRangeDialog
 import com.marosseleng.compose.material3.datetimepickers.time.ui.dialog.TimePickerDialog
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -36,6 +37,17 @@ fun SettingsScreen(
             onTimeChange = { viewModel.onEvent(SettingsEvent.TimePickerTimeChanged(it)) }
         )
     }
+    EditPageRangeDialog(
+        isVisible = state.isEditPageRangeDialogVisible,
+        startPage = state.dialogStartPage,
+        endPage = state.dialogEndPage,
+        startPageError = state.dialogStartPageError,
+        endPageError = state.dialogEndPageError,
+        onStartPageChanged = { viewModel.onEvent(SettingsEvent.EditPageRangeDialogStartPageChanged(it)) },
+        onEndPageChanged = { viewModel.onEvent(SettingsEvent.EditPageRangeDialogEndPageChanged(it)) },
+        onDismissRequest = { viewModel.onEvent(SettingsEvent.EditPageRangeDialogDismissed) },
+        onConfirmClicked = { viewModel.onEvent(SettingsEvent.EditPageRangeDialogConfirmed) }
+    )
 
     Scaffold(
         topBar = {

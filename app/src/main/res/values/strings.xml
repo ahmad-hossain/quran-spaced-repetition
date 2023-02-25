@@ -29,4 +29,10 @@
     <string name="notification_time_setting">Daily Review Reminder Notification Time</string>
     <string name="quran_pages_setting"><![CDATA[Quran Start & End Page]]></string>
     <string name="select_time">Select time</string>
+    <string name="start_page">Start Page</string>
+    <string name="end_page">End Page</string>
+    <string name="edit_start_and_end_page"><![CDATA[Edit Start & End Page]]></string>
+    <string name="empty_field_error">Field must not be empty</string>
+    <string name="start_greater_than_end_error">Must be less than end page</string>
+    <string name="end_less_than_start_error">Must be greater than start page</string>
 </resources>
