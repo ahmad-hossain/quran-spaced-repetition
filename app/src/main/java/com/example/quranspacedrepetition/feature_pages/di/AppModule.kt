@@ -30,6 +30,8 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import javax.inject.Singleton
 
@@ -53,9 +55,13 @@ object AppModule {
                 Timber.d("onCreate RoomDatabase")
                 super.onCreate(db)
 
-                val defaultPage = Page(pageNumber = 0)
-                (UserPreferences.DEFAULT_START_PAGE..UserPreferences.DEFAULT_END_PAGE).forEach { pageNum ->
-                    db.execSQL("INSERT INTO Page VALUES ($pageNum, ${defaultPage.interval}, ${defaultPage.repetitions}, ${defaultPage.eFactor}, ${defaultPage.dueDate})")
+                runBlocking {
+                    val userPrefs = app.dataStore.data.first()
+                    val defaultPage = Page(pageNumber = 0)
+
+                    (userPrefs.startPage..userPrefs.endPage).forEach { pageNum ->
+                        db.execSQL("INSERT INTO Page VALUES ($pageNum, ${defaultPage.interval}, ${defaultPage.repetitions}, ${defaultPage.eFactor}, ${defaultPage.dueDate})")
+                    }
                 }
             }
         }).build()
