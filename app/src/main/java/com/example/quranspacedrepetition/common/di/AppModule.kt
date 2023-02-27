@@ -1,4 +1,4 @@
-package com.example.quranspacedrepetition.feature_pages.di
+package com.example.quranspacedrepetition.common.di
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -8,21 +8,17 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.activity.ComponentActivity
-import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.quranspacedrepetition.MainActivity
-import com.example.quranspacedrepetition.R
 import com.example.quranspacedrepetition.feature_pages.data.data_source.PageDatabase
 import com.example.quranspacedrepetition.feature_pages.data.repository.PageRepositoryImpl
 import com.example.quranspacedrepetition.feature_pages.domain.model.Page
 import com.example.quranspacedrepetition.feature_pages.domain.receiver.AlarmReceiver
 import com.example.quranspacedrepetition.feature_pages.domain.repository.PageRepository
-import com.example.quranspacedrepetition.feature_pages.domain.use_case.UpdateReminderNotification
 import com.example.quranspacedrepetition.feature_settings.data.data_source.UserPreferencesSerializer
 import com.example.quranspacedrepetition.feature_settings.domain.model.UserPreferences
 import dagger.Module
@@ -65,25 +61,6 @@ object AppModule {
                 }
             }
         }).build()
-    }
-
-    @Provides
-    fun provideNotificationBuilder(@ApplicationContext context: Context): NotificationCompat.Builder {
-        val intent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        } else {
-            PendingIntent.FLAG_UPDATE_CURRENT
-        }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, flags)
-
-        return NotificationCompat.Builder(context, UpdateReminderNotification.REMINDER_NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_quran)
-            .setContentTitle(context.getString(R.string.reminder_notification_title))
-            .setContentIntent(pendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
     }
 
     @Provides
