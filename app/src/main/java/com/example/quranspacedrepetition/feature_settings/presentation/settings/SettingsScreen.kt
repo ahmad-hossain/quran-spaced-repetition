@@ -10,11 +10,13 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.quranspacedrepetition.R
 import com.example.quranspacedrepetition.feature_pages.presentation.components.CustomBottomBar
 import com.example.quranspacedrepetition.feature_pages.presentation.components.Screen
 import com.example.quranspacedrepetition.feature_settings.presentation.settings.components.EditPageRangeDialog
+import com.example.quranspacedrepetition.feature_settings.presentation.settings.components.SettingsSectionHeadline
 import com.marosseleng.compose.material3.datetimepickers.time.ui.dialog.TimePickerDialog
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -75,12 +77,15 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
+            SettingsSectionHeadline(text = "Revision")
             ListItem(
                 modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.NotificationTimeSettingClicked) },
                 headlineText = { Text(stringResource(R.string.notification_time_setting)) },
                 supportingText = { Text(state.userPreferences.notificationTime.format(
                     DateTimeFormatter.ofPattern("hh:mm a"))) }
             )
+            Divider(modifier = Modifier.padding(vertical = 16.dp))
+            SettingsSectionHeadline(text = "Notifications")
             ListItem(
                 modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.PageNumberSettingClicked) },
                 headlineText = { Text(stringResource(R.string.quran_pages_setting)) },

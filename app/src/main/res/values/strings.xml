@@ -26,7 +26,7 @@
     <string name="revision">Revision</string>
     <string name="navigate_back">Navigate Back</string>
     <string name="settings">Settings</string>
-    <string name="notification_time_setting">Daily Review Reminder Notification Time</string>
+    <string name="notification_time_setting">Daily Review Reminder Time</string>
     <string name="quran_pages_setting"><![CDATA[Quran Start & End Page]]></string>
     <string name="select_time">Select time</string>
     <string name="start_page">Start Page</string>
