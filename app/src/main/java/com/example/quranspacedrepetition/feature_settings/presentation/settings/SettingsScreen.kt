@@ -77,19 +77,19 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            SettingsSectionHeadline(text = "Revision")
+            SettingsSectionHeadline(text = stringResource(R.string.revision))
+            ListItem(
+                modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.PageNumberSettingClicked) },
+                headlineText = { Text(stringResource(R.string.quran_pages_setting)) },
+                supportingText = { Text("${state.userPreferences.startPage} - ${state.userPreferences.endPage}") }
+            )
+            Divider(modifier = Modifier.padding(vertical = 16.dp))
+            SettingsSectionHeadline(text = stringResource(R.string.notifications))
             ListItem(
                 modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.NotificationTimeSettingClicked) },
                 headlineText = { Text(stringResource(R.string.notification_time_setting)) },
                 supportingText = { Text(state.userPreferences.notificationTime.format(
                     DateTimeFormatter.ofPattern("hh:mm a"))) }
-            )
-            Divider(modifier = Modifier.padding(vertical = 16.dp))
-            SettingsSectionHeadline(text = "Notifications")
-            ListItem(
-                modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.PageNumberSettingClicked) },
-                headlineText = { Text(stringResource(R.string.quran_pages_setting)) },
-                supportingText = { Text("${state.userPreferences.startPage} - ${state.userPreferences.endPage}") }
             )
         }
     }
