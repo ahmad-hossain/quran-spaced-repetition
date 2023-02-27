@@ -1,5 +1,6 @@
 package com.example.quranspacedrepetition.feature_pages.data.repository
 
+import androidx.sqlite.db.SimpleSQLiteQuery
 import com.example.quranspacedrepetition.feature_pages.data.data_source.PageDao
 import com.example.quranspacedrepetition.feature_pages.domain.model.Page
 import com.example.quranspacedrepetition.feature_pages.domain.repository.PageRepository
@@ -14,5 +15,10 @@ class PageRepositoryImpl(
 
     override suspend fun updatePage(page: Page) {
         pageDao.updatePage(page)
+    }
+
+    override suspend fun checkpoint() {
+        val checkpointQuery = "pragma wal_checkpoint(full)"
+        pageDao.checkpoint(SimpleSQLiteQuery(checkpointQuery))
     }
 }

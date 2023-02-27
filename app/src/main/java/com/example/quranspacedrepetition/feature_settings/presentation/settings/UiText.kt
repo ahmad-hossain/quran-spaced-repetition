@@ -1,4 +1,4 @@
-package com.example.quranspacedrepetition.feature_settings.domain.model
+package com.example.quranspacedrepetition.feature_settings.presentation.settings
 
 import android.content.Context
 import androidx.annotation.StringRes

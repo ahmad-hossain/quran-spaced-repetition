@@ -1,6 +1,7 @@
 package com.example.quranspacedrepetition.feature_settings.presentation.settings
 
-import android.content.Context
+import android.app.Activity
+import android.app.Application
 import android.content.Intent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,15 +12,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.quranspacedrepetition.R
 import com.example.quranspacedrepetition.common.use_case.ScheduleNotificationAlarm
 import com.example.quranspacedrepetition.feature_pages.data.data_source.PageDatabase
-import com.example.quranspacedrepetition.feature_settings.domain.model.UiText
+import com.example.quranspacedrepetition.feature_pages.domain.repository.PageRepository
 import com.example.quranspacedrepetition.feature_settings.domain.model.UserPreferences
 import com.example.quranspacedrepetition.feature_settings.domain.repository.SettingsRepository
+import com.example.quranspacedrepetition.feature_settings.domain.use_case.ValidSqlLiteDb
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -30,11 +30,16 @@ class SettingsViewModel @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val dataStore: DataStore<UserPreferences>,
     private val scheduleNotificationAlarmUseCase: ScheduleNotificationAlarm,
-    @ApplicationContext private val appContext: Context,
+    private val app: Application,
+    private val validSqlLiteDbUseCase: ValidSqlLiteDb,
+    private val db: PageDatabase,
+    private val pageRepository: PageRepository,
 ) : ViewModel() {
 
     var state by mutableStateOf(SettingsState())
         private set
+    private val _uiEvent = MutableSharedFlow<SettingsUiEvent>()
+    val uiEvent: SharedFlow<SettingsUiEvent> = _uiEvent.asSharedFlow()
 
     fun onEvent(event: SettingsEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
@@ -57,11 +62,11 @@ class SettingsViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     dataStore.updateData { it.copy(startPage = startPage, endPage = endPage) }
 
-                    appContext.deleteDatabase(PageDatabase.DATABASE_NAME)
+                    app.deleteDatabase(PageDatabase.DATABASE_NAME)
 
-                    val intent = appContext.packageManager.getLaunchIntentForPackage(appContext.packageName)
+                    val intent = app.packageManager.getLaunchIntentForPackage(app.packageName)
                     intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    appContext.startActivity(intent)
+                    app.startActivity(intent)
                     exitProcess(0)
                 }
             }
@@ -86,8 +91,71 @@ class SettingsViewModel @Inject constructor(
                 }
                 state = state.copy(dialogEndPage = event.endPage, dialogEndPageError = endPageError)
             }
-            is SettingsEvent.ExportDataClicked -> TODO()
-            is SettingsEvent.ImportDataClicked -> TODO()
+            is SettingsEvent.ExportDataClicked -> {
+                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                    type = "*/*"
+                    putExtra(Intent.EXTRA_TITLE, "quran_hifz_revision_backup.db")
+                }
+                viewModelScope.launch {
+                    _uiEvent.emit(SettingsUiEvent.LaunchCreateDocumentIntent(intent))
+                }
+            }
+            is SettingsEvent.ImportDataClicked -> {
+                val dbMimeTypes = arrayOf("application/vnd.sqlite3", "application/octet-stream")
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "*/*"
+                    putExtra(Intent.EXTRA_MIME_TYPES, dbMimeTypes)
+                }
+                viewModelScope.launch {
+                    _uiEvent.emit(SettingsUiEvent.LaunchOpenDocumentIntent(intent))
+                }
+            }
+            is SettingsEvent.OnCreateDocumentActivityResult -> {
+                if (event.result.resultCode != Activity.RESULT_OK) return
+                val userChosenUri = event.result.data?.data
+                if (userChosenUri == null) {
+                    viewModelScope.launch { _uiEvent.emit(SettingsUiEvent.Toast(UiText.StringResource(R.string.error_null_uri))) }
+                    return
+                }
+
+                viewModelScope.launch(Dispatchers.IO) {
+                    pageRepository.checkpoint()
+
+                    val inputStream = app.getDatabasePath(PageDatabase.DATABASE_NAME).inputStream()
+                    val outputStream = app.contentResolver.openOutputStream(userChosenUri) ?: return@launch
+
+                    inputStream.copyTo(outputStream)
+
+                    inputStream.close()
+                    outputStream.close()
+                }
+            }
+            is SettingsEvent.OnOpenDocumentActivityResult -> {
+                if (event.result.resultCode != Activity.RESULT_OK) return
+                val dbUri = event.result.data?.data ?: return
+                if (!validSqlLiteDbUseCase.isValid(dbUri)) {
+                    Timber.d("OnOpenDocumentActivityResult: Invalid sqlite db")
+                    viewModelScope.launch { _uiEvent.emit(SettingsUiEvent.Toast(UiText.StringResource(R.string.error_invalid_file))) }
+                    return
+                }
+
+                viewModelScope.launch(Dispatchers.IO) {
+                    db.close()
+
+                    val inputStream = app.contentResolver.openInputStream(dbUri) ?: return@launch
+                    val outputStream = app.getDatabasePath(PageDatabase.DATABASE_NAME).outputStream()
+
+                    inputStream.copyTo(outputStream)
+                    inputStream.close()
+                    outputStream.close()
+
+                    val intent = app.packageManager.getLaunchIntentForPackage(app.packageName)
+                    intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    app.startActivity(intent)
+                    exitProcess(0)
+                }
+            }
         }
     }
 

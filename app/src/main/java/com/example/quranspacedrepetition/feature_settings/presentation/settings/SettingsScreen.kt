@@ -1,5 +1,8 @@
 package com.example.quranspacedrepetition.feature_settings.presentation.settings
 
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,7 +13,9 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.quranspacedrepetition.R
@@ -30,6 +35,24 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
     navigator: DestinationsNavigator,
 ) {
+    val createDocumentActivityResultLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            viewModel.onEvent(SettingsEvent.OnCreateDocumentActivityResult(it))
+        }
+    val openDocumentActivityResultLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            viewModel.onEvent(SettingsEvent.OnOpenDocumentActivityResult(it))
+        }
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        viewModel.uiEvent.collect {
+            when (it) {
+                is SettingsUiEvent.LaunchCreateDocumentIntent -> createDocumentActivityResultLauncher.launch(it.intent)
+                is SettingsUiEvent.LaunchOpenDocumentIntent -> openDocumentActivityResultLauncher.launch(it.intent)
+                is SettingsUiEvent.Toast -> Toast.makeText(context, it.s.asString(context), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
     val state = viewModel.state
 
     if (state.isTimePickerVisible) {

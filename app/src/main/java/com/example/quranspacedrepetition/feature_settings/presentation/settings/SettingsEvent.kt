@@ -1,5 +1,6 @@
 package com.example.quranspacedrepetition.feature_settings.presentation.settings
 
+import androidx.activity.result.ActivityResult
 import java.time.LocalTime
 
 sealed class SettingsEvent {
@@ -13,4 +14,6 @@ sealed class SettingsEvent {
     object EditPageRangeDialogDismissed : SettingsEvent()
     object ExportDataClicked : SettingsEvent()
     object ImportDataClicked : SettingsEvent()
+    data class OnCreateDocumentActivityResult(val result: ActivityResult) : SettingsEvent()
+    data class OnOpenDocumentActivityResult(val result: ActivityResult) : SettingsEvent()
 }

@@ -26,7 +26,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.example.quranspacedrepetition.R
-import com.example.quranspacedrepetition.feature_settings.domain.model.UiText
+import com.example.quranspacedrepetition.feature_settings.presentation.settings.UiText
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
