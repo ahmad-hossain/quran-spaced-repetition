@@ -6,11 +6,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.quranspacedrepetition.R
 import com.example.quranspacedrepetition.feature_pages.presentation.components.CustomBottomBar
@@ -83,7 +84,6 @@ fun SettingsScreen(
                 headlineText = { Text(stringResource(R.string.quran_pages_setting)) },
                 supportingText = { Text("${state.userPreferences.startPage} - ${state.userPreferences.endPage}") }
             )
-            Divider(modifier = Modifier.padding(vertical = 16.dp))
             SettingsSectionHeadline(text = stringResource(R.string.notifications))
             ListItem(
                 modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.NotificationTimeSettingClicked) },
