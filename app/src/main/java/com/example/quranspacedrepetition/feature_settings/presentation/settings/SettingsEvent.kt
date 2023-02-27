@@ -11,4 +11,6 @@ sealed class SettingsEvent {
     data class EditPageRangeDialogEndPageChanged(val endPage: String) : SettingsEvent()
     object EditPageRangeDialogConfirmed : SettingsEvent()
     object EditPageRangeDialogDismissed : SettingsEvent()
+    object ExportDataClicked : SettingsEvent()
+    object ImportDataClicked : SettingsEvent()
 }

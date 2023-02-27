@@ -91,6 +91,19 @@ fun SettingsScreen(
                 supportingText = { Text(state.userPreferences.notificationTime.format(
                     DateTimeFormatter.ofPattern("hh:mm a"))) }
             )
+            SettingsSectionHeadline(text = "Backup")
+            ListItem(
+                modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.ExportDataClicked) },
+                leadingContent = { Icon(Icons.Default.Upload, contentDescription = null) },
+                headlineText = { Text(stringResource(R.string.headline_export_data)) },
+                supportingText = { Text(stringResource(R.string.supporting_export_data)) },
+            )
+            ListItem(
+                modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.ImportDataClicked) },
+                leadingContent = { Icon(Icons.Default.Download, contentDescription = null) },
+                headlineText = { Text(stringResource(R.string.headline_import_data)) },
+                supportingText = { Text(stringResource(R.string.supporting_import_data)) },
+            )
         }
     }
 }

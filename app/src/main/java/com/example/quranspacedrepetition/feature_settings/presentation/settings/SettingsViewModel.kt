@@ -86,6 +86,8 @@ class SettingsViewModel @Inject constructor(
                 }
                 state = state.copy(dialogEndPage = event.endPage, dialogEndPageError = endPageError)
             }
+            is SettingsEvent.ExportDataClicked -> TODO()
+            is SettingsEvent.ImportDataClicked -> TODO()
         }
     }
 
