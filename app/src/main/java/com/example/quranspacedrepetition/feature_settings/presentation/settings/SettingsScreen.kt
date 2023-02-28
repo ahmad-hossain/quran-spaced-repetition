@@ -107,6 +107,7 @@ fun SettingsScreen(
                 headlineText = { Text(stringResource(R.string.quran_pages_setting)) },
                 supportingText = { Text("${state.userPreferences.startPage} - ${state.userPreferences.endPage}") }
             )
+            Divider()
             SettingsSectionHeadline(text = stringResource(R.string.notifications))
             ListItem(
                 modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.NotificationTimeSettingClicked) },
@@ -114,6 +115,7 @@ fun SettingsScreen(
                 supportingText = { Text(state.userPreferences.notificationTime.format(
                     DateTimeFormatter.ofPattern("hh:mm a"))) }
             )
+            Divider()
             SettingsSectionHeadline(text = "Backup")
             ListItem(
                 modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.ExportDataClicked) },
