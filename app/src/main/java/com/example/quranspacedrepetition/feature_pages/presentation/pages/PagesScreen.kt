@@ -133,6 +133,7 @@ fun PagesScreen(
                 onTabClicked = { viewModel.onEvent(PagesEvent.TabClicked(it)) }
             )
             LazyColumn(
+                modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = BottomBarHeight + FabHeight + ScaffoldFabSpacing * 2),
                 state = lazyListState
             ) {
