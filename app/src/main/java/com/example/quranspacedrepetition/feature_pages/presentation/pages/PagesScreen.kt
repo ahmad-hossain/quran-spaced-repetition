@@ -15,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -53,6 +54,11 @@ fun PagesScreen(
 ) {
     val state = viewModel.state
     val lazyListState = rememberLazyListState()
+    val isListScrolled by remember {
+        derivedStateOf {
+            lazyListState.firstVisibleItemIndex > 0
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.scrollToIndex.collect {
@@ -98,7 +104,10 @@ fun PagesScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.revision)) },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    scrolledContainerColor = if (isListScrolled) MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp) else MaterialTheme.colorScheme.surface,
+                )
             )
         },
         bottomBar = {
@@ -129,6 +138,7 @@ fun PagesScreen(
                 )
         ) {
             TabsSection(
+                containerColor = if (isListScrolled) MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp) else TabRowDefaults.containerColor,
                 selectedTab = state.selectedTab,
                 onTabClicked = { viewModel.onEvent(PagesEvent.TabClicked(it)) }
             )
@@ -155,9 +165,11 @@ fun PagesScreen(
 @Composable
 private fun TabsSection(
     selectedTab: UiTabs,
-    onTabClicked: (UiTabs) -> Unit
+    onTabClicked: (UiTabs) -> Unit,
+    containerColor: Color,
 ) {
     TabRow(
+        containerColor = containerColor,
         selectedTabIndex = selectedTab.ordinal,
     ) {
         Tab(
