@@ -14,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -31,6 +32,7 @@ import com.example.quranspacedrepetition.feature_pages.presentation.components.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import java.time.LocalDate
 import kotlin.math.roundToInt
 
 private val FabHeight = 56.dp
@@ -152,8 +154,10 @@ fun PagesScreen(
                         TableHeader()
                 }
                 items(state.displayedPages) { page ->
+                    val shouldGradePage = page.dueDate == null || page.dueDate == LocalDate.now()
                     PageItem(
-                        modifier = Modifier.clickable { viewModel.onEvent(PagesEvent.PageClicked(page)) },
+                        modifier =
+                        if (shouldGradePage) Modifier.clickable { viewModel.onEvent(PagesEvent.PageClicked(page)) } else Modifier.alpha(0.38f),
                         page = page
                     )
                 }
