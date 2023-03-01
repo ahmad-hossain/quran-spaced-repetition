@@ -197,10 +197,13 @@ private fun TabsSection(
 @Composable
 private fun TableHeader() {
     val bold = FontWeight.Bold
-    Row(Modifier.background(MaterialTheme.colorScheme.background)) {
-        TableCell(fontWeight = bold, text = stringResource(R.string.page_number_abbrev), weight = 1f)
-        TableCell(fontWeight = bold, text = stringResource(R.string.interval), weight = 1f)
-        TableCell(fontWeight = bold, text = stringResource(R.string.repetitions), weight = 1f)
-        TableCell(fontWeight = bold, text = stringResource(R.string.due_date), weight = 1f)
+    Column {
+        Row(Modifier.background(MaterialTheme.colorScheme.background)) {
+            TableCell(fontWeight = bold, text = stringResource(R.string.page_number_abbrev), weight = 1f)
+            TableCell(fontWeight = bold, text = stringResource(R.string.interval), weight = 1f)
+            TableCell(fontWeight = bold, text = stringResource(R.string.repetitions), weight = 1f)
+            TableCell(fontWeight = bold, text = stringResource(R.string.due_date), weight = 1f)
+        }
+        Divider(color = Color.Gray, thickness = 1.dp)
     }
 }
