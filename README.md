@@ -16,6 +16,7 @@ Android app that utilizes spaced repetition to assist with retaining memorized Q
         * [Settings](#settings-screen)
 * [Tutorials](#tutorials)
     * [Reviewing Pages](#reviewing-pages)
+* [Credits](#credits)
 
 # Why You Should Use
 
@@ -27,6 +28,7 @@ Android app that utilizes spaced repetition to assist with retaining memorized Q
   you review each page of the Quran at optimal intervals to enhance long-term memorization.
 
 # Links
+
 TODO Google Play Store Link
 
 # App Overview
@@ -112,6 +114,12 @@ This screen allows you to configure various settings for the app.
    4: **Bad**, wrong response; the correct answer seems to be familiar \
    5: **Null**, complete blackout; you do not even recall ever knowing the answer. If you follow the
    review schedule that the app provides, you should rarely or never need this grade.
+
+   **NOTE**: Ensure you understand the difference between **Pass** and **Fail**!
+    * **Pass** and more means **remembering**!
+    * **Fail** and less means **forgetting**!
+
+   ###### Grade Explanation altered from [SuperMemo wiki](https://super-memory.com/help/learn.htm)
 
 # Credits
 
