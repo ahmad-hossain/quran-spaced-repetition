@@ -9,4 +9,6 @@ interface PageRepository {
     fun getPagesDueToday(): Flow<List<Page>>
 
     suspend fun updatePage(page: Page)
+
+    suspend fun checkpoint()
 }

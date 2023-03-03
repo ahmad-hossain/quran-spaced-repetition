@@ -17,7 +17,7 @@ enum class Screen {
 
 @Composable
 fun CustomBottomBar(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     currentScreen: Screen,
     onHomeClicked: () -> Unit = {},
     onSettingsClicked: () -> Unit = {},

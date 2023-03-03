@@ -1,9 +1,7 @@
 package com.example.quranspacedrepetition.feature_pages.data.data_source
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
+import androidx.room.*
+import androidx.sqlite.db.SupportSQLiteQuery
 import com.example.quranspacedrepetition.feature_pages.domain.model.Page
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
@@ -22,4 +20,7 @@ interface PageDao {
 
     @Update
     suspend fun updatePage(page: Page)
+
+    @RawQuery
+    fun checkpoint(supportSQLiteQuery: SupportSQLiteQuery): Int
 }

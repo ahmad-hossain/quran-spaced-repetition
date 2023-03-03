@@ -1,4 +1,4 @@
-package com.example.quranspacedrepetition.feature_pages.di
+package com.example.quranspacedrepetition.common.di
 
 import android.annotation.SuppressLint
 import android.app.AlarmManager
@@ -8,25 +8,26 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.activity.ComponentActivity
-import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.datastore.core.DataStore
+import androidx.datastore.dataStore
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.quranspacedrepetition.MainActivity
-import com.example.quranspacedrepetition.R
 import com.example.quranspacedrepetition.feature_pages.data.data_source.PageDatabase
 import com.example.quranspacedrepetition.feature_pages.data.repository.PageRepositoryImpl
 import com.example.quranspacedrepetition.feature_pages.domain.model.Page
 import com.example.quranspacedrepetition.feature_pages.domain.receiver.AlarmReceiver
 import com.example.quranspacedrepetition.feature_pages.domain.repository.PageRepository
-import com.example.quranspacedrepetition.feature_pages.domain.use_case.UpdateReminderNotification
-import com.example.quranspacedrepetition.feature_pages.presentation.pages.PagesViewModel
+import com.example.quranspacedrepetition.feature_settings.data.data_source.UserPreferencesSerializer
+import com.example.quranspacedrepetition.feature_settings.domain.model.UserPreferences
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.first
 import timber.log.Timber
 import javax.inject.Singleton
 
@@ -50,31 +51,16 @@ object AppModule {
                 Timber.d("onCreate RoomDatabase")
                 super.onCreate(db)
 
-                val defaultPage = Page(pageNumber = 0)
-                (PagesViewModel.MIN_PAGE_NUMBER..PagesViewModel.MAX_PAGE_NUMBER).forEach { pageNum ->
-                    db.execSQL("INSERT INTO Page VALUES ($pageNum, ${defaultPage.interval}, ${defaultPage.repetitions}, ${defaultPage.eFactor}, ${defaultPage.dueDate})")
+                runBlocking {
+                    val userPrefs = app.dataStore.data.first()
+                    val defaultPage = Page(pageNumber = 0)
+
+                    (userPrefs.startPage..userPrefs.endPage).forEach { pageNum ->
+                        db.execSQL("INSERT INTO Page VALUES ($pageNum, ${defaultPage.interval}, ${defaultPage.repetitions}, ${defaultPage.eFactor}, ${defaultPage.dueDate})")
+                    }
                 }
             }
         }).build()
-    }
-
-    @Provides
-    fun provideNotificationBuilder(@ApplicationContext context: Context): NotificationCompat.Builder {
-        val intent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
-        } else {
-            PendingIntent.FLAG_UPDATE_CURRENT
-        }
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, flags)
-
-        return NotificationCompat.Builder(context, UpdateReminderNotification.REMINDER_NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_quran)
-            .setContentTitle(context.getString(R.string.reminder_notification_title))
-            .setContentIntent(pendingIntent)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
     }
 
     @Provides
@@ -95,5 +81,15 @@ object AppModule {
             false -> PendingIntent.FLAG_UPDATE_CURRENT
         }
         return PendingIntent.getBroadcast(context, 0, intent, flags)
+    }
+
+    private val Context.dataStore: DataStore<UserPreferences> by dataStore(
+        fileName = "user-prefs.json",
+        serializer = UserPreferencesSerializer
+    )
+
+    @Provides
+    fun provideDataStore(appContext: Application): DataStore<UserPreferences> {
+        return appContext.dataStore
     }
 }

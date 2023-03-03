@@ -2,8 +2,6 @@ package com.example.quranspacedrepetition.feature_pages.domain.use_case
 
 import android.Manifest
 import android.app.AlarmManager
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -11,6 +9,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.quranspacedrepetition.R
+import com.example.quranspacedrepetition.common.use_case.ScheduleNotificationAlarm
 import com.example.quranspacedrepetition.feature_pages.domain.model.Page
 import com.example.quranspacedrepetition.feature_pages.domain.repository.PageRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -41,7 +40,6 @@ class UpdateReminderNotification @Inject constructor(
 
         withContext(Dispatchers.Main) {
             updateNotificationBuilder(duePages)
-            createNotificationChannel()
             sendNotification()
             scheduleNotificationAlarm()
         }
@@ -57,16 +55,6 @@ class UpdateReminderNotification @Inject constructor(
         reminderNotificationBuilder
             .setOngoing(isNotificationOngoing)
             .setContentText(contentText)
-    }
-
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = context.getString(R.string.reminder_notification_channel_name)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val mChannel =
-                NotificationChannel(REMINDER_NOTIFICATION_CHANNEL_ID, name, importance)
-            notificationManager.createNotificationChannel(mChannel)
-        }
     }
 
     private fun sendNotification() {
