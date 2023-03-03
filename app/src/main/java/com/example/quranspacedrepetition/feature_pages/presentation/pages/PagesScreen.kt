@@ -14,7 +14,9 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -31,6 +33,7 @@ import com.example.quranspacedrepetition.feature_pages.presentation.components.*
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import java.time.LocalDate
 import kotlin.math.roundToInt
 
 private val FabHeight = 56.dp
@@ -54,6 +57,11 @@ fun PagesScreen(
 ) {
     val state = viewModel.state
     val lazyListState = rememberLazyListState()
+    val isListScrolled by remember {
+        derivedStateOf {
+            lazyListState.firstVisibleItemIndex > 0
+        }
+    }
 
     LaunchedEffect(Unit) {
         viewModel.scrollToIndex.collect {
@@ -99,7 +107,10 @@ fun PagesScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.revision)) },
-                scrollBehavior = scrollBehavior
+                scrollBehavior = scrollBehavior,
+                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                    scrolledContainerColor = if (isListScrolled) MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp) else MaterialTheme.colorScheme.surface,
+                )
             )
         },
         bottomBar = {
@@ -130,10 +141,12 @@ fun PagesScreen(
                 )
         ) {
             TabsSection(
+                containerColor = if (isListScrolled) MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp) else TabRowDefaults.containerColor,
                 selectedTab = state.selectedTab,
                 onTabClicked = { viewModel.onEvent(PagesEvent.TabClicked(it)) }
             )
             LazyColumn(
+                modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = BottomBarHeight + FabHeight + ScaffoldFabSpacing * 2),
                 state = lazyListState
             ) {
@@ -142,8 +155,10 @@ fun PagesScreen(
                         TableHeader()
                 }
                 items(state.displayedPages) { page ->
+                    val shouldGradePage = page.dueDate == null || page.dueDate == LocalDate.now()
                     PageItem(
-                        modifier = Modifier.clickable { viewModel.onEvent(PagesEvent.PageClicked(page)) },
+                        modifier =
+                        if (shouldGradePage) Modifier.clickable { viewModel.onEvent(PagesEvent.PageClicked(page)) } else Modifier.alpha(0.38f),
                         page = page
                     )
                 }
@@ -155,9 +170,11 @@ fun PagesScreen(
 @Composable
 private fun TabsSection(
     selectedTab: UiTabs,
-    onTabClicked: (UiTabs) -> Unit
+    onTabClicked: (UiTabs) -> Unit,
+    containerColor: Color,
 ) {
     TabRow(
+        containerColor = containerColor,
         selectedTabIndex = selectedTab.ordinal,
     ) {
         Tab(
@@ -185,10 +202,13 @@ private fun TabsSection(
 @Composable
 private fun TableHeader() {
     val bold = FontWeight.Bold
-    Row(Modifier.background(MaterialTheme.colorScheme.background)) {
-        TableCell(fontWeight = bold, text = stringResource(R.string.page_number_abbrev), weight = 1f)
-        TableCell(fontWeight = bold, text = stringResource(R.string.interval), weight = 1f)
-        TableCell(fontWeight = bold, text = stringResource(R.string.repetitions), weight = 1f)
-        TableCell(fontWeight = bold, text = stringResource(R.string.due_date), weight = 1f)
+    Column {
+        Row(Modifier.background(MaterialTheme.colorScheme.background)) {
+            TableCell(fontWeight = bold, text = stringResource(R.string.page_number_abbrev), weight = 1f)
+            TableCell(fontWeight = bold, text = stringResource(R.string.interval), weight = 1f)
+            TableCell(fontWeight = bold, text = stringResource(R.string.repetitions), weight = 1f)
+            TableCell(fontWeight = bold, text = stringResource(R.string.due_date), weight = 1f)
+        }
+        Divider(color = Color.Gray, thickness = 1.dp)
     }
 }
