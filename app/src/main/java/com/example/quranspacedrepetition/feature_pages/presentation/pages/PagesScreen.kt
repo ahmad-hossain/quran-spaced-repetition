@@ -80,7 +80,7 @@ fun PagesScreen(
     SearchDialog(
         isVisible = state.isSearchDialogVisible,
         searchQuery = state.searchQuery,
-        searchQueryHasError = state.searchQueryHasError,
+        searchQueryError = state.searchQueryError,
         onSearchQueryChanged = { viewModel.onEvent(PagesEvent.SearchQueryChanged(it)) },
         onSearchDialogConfirmed = { viewModel.onEvent(PagesEvent.SearchDialogConfirmed) },
         onSearchDialogDismissed = { viewModel.onEvent(PagesEvent.SearchDialogDismissed) },

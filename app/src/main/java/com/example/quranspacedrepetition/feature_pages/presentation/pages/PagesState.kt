@@ -1,6 +1,7 @@
 package com.example.quranspacedrepetition.feature_pages.presentation.pages
 
 import com.example.quranspacedrepetition.feature_pages.domain.model.Page
+import com.example.quranspacedrepetition.feature_settings.presentation.settings.UiText
 
 data class PagesState(
     val displayedPages: List<Page> = emptyList(),
@@ -11,5 +12,5 @@ data class PagesState(
     val selectedGrade: Int = 5,
     val isSearchDialogVisible: Boolean = false,
     val searchQuery: String = "",
-    val searchQueryHasError: Boolean = false,
+    val searchQueryError: UiText? = null,
 )

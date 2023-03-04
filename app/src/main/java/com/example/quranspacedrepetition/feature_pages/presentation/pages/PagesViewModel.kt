@@ -5,11 +5,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.quranspacedrepetition.R
 import com.example.quranspacedrepetition.feature_pages.domain.model.Page
 import com.example.quranspacedrepetition.feature_pages.domain.repository.PageRepository
 import com.example.quranspacedrepetition.feature_pages.domain.use_case.SuperMemo
 import com.example.quranspacedrepetition.feature_pages.domain.use_case.UpdateReminderNotification
 import com.example.quranspacedrepetition.feature_pages.presentation.pages.PagesEvent.*
+import com.example.quranspacedrepetition.feature_settings.presentation.settings.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -88,7 +90,12 @@ class PagesViewModel @Inject constructor(
             is SearchDialogDismissed -> resetSearchDialog()
             is SearchQueryChanged -> {
                 val isValidNumber = Regex("\\d+").matches(event.query)
-                state = state.copy(searchQuery = event.query, searchQueryHasError = !isValidNumber)
+                val searchQueryError = when {
+                    event.query.isEmpty() -> UiText.StringResource(R.string.empty_field_error)
+                    !isValidNumber -> UiText.StringResource(R.string.invalid_number)
+                    else -> null
+                }
+                state = state.copy(searchQuery = event.query, searchQueryError = searchQueryError)
             }
         }
     }
@@ -97,7 +104,7 @@ class PagesViewModel @Inject constructor(
         state = state.copy(
             isSearchDialogVisible = false,
             searchQuery = "",
-            searchQueryHasError = false
+            searchQueryError = null
         )
     }
 
