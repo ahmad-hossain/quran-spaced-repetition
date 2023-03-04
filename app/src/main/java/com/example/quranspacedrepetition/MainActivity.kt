@@ -8,6 +8,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.material3.Surface
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -36,7 +37,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             QuranSpacedRepetitionTheme {
-                DestinationsNavHost(navGraph = NavGraphs.root)
+                Surface {
+                    DestinationsNavHost(navGraph = NavGraphs.root)
+                }
             }
         }
     }
