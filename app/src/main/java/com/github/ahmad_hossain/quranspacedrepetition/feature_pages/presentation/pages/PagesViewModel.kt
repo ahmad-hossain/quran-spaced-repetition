@@ -89,10 +89,15 @@ class PagesViewModel @Inject constructor(
             }
             is SearchDialogDismissed -> resetSearchDialog()
             is SearchQueryChanged -> {
-                val isValidNumber = Regex("\\d+").matches(event.query)
                 val searchQueryError = when {
                     event.query.isEmpty() -> UiText.StringResource(R.string.empty_field_error)
-                    !isValidNumber -> UiText.StringResource(R.string.invalid_number)
+                    event.query.toIntOrNull() == null -> {
+                        state = state.copy(
+                            searchQuery = state.searchQuery,
+                            searchQueryError = UiText.StringResource(R.string.invalid_number)
+                        )
+                        return
+                    }
                     else -> null
                 }
                 state = state.copy(searchQuery = event.query, searchQueryError = searchQueryError)
