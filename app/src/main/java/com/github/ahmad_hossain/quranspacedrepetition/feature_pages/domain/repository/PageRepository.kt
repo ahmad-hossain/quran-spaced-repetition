@@ -1,0 +1,14 @@
+package com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.repository
+
+import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.model.Page
+import kotlinx.coroutines.flow.Flow
+
+interface PageRepository {
+    fun getPages(): Flow<List<Page>>
+
+    fun getPagesDueToday(): Flow<List<Page>>
+
+    suspend fun updatePage(page: Page)
+
+    suspend fun checkpoint()
+}

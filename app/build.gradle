@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.quranspacedrepetition'
+    namespace 'com.github.ahmad_hossain.quranspacedrepetition'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.quranspacedrepetition"
+        applicationId "com.github.ahmad_hossain.quranspacedrepetition"
         minSdk 21
         targetSdk 33
         versionCode 1
