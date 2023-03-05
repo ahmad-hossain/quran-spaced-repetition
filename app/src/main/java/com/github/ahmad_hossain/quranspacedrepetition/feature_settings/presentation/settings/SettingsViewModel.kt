@@ -73,9 +73,17 @@ class SettingsViewModel @Inject constructor(
             is SettingsEvent.EditPageRangeDialogStartPageChanged -> {
                 val start = event.startPage
                 val end = state.dialogEndPage
+                val startInt = start.toIntOrNull()
                 val startPageError = when {
                     start.isEmpty() -> UiText.StringResource(R.string.empty_field_error)
-                    start.toInt() >= end.toInt() -> UiText.StringResource(R.string.start_greater_than_end_error)
+                    startInt == null -> {
+                        state = state.copy(
+                            dialogStartPage = state.dialogStartPage,
+                            dialogStartPageError = UiText.StringResource(R.string.invalid_number)
+                        )
+                        return
+                    }
+                    startInt >= end.toInt() -> UiText.StringResource(R.string.start_greater_than_end_error)
                     else -> null
                 }
                 state = state.copy(dialogStartPage = event.startPage, dialogStartPageError = startPageError)
@@ -83,8 +91,16 @@ class SettingsViewModel @Inject constructor(
             is SettingsEvent.EditPageRangeDialogEndPageChanged -> {
                 val start = state.dialogStartPage
                 val end = event.endPage
+                val endInt = end.toIntOrNull()
                 val endPageError = when {
                     end.isEmpty() -> UiText.StringResource(R.string.empty_field_error)
+                    endInt == null -> {
+                        state = state.copy(
+                            dialogEndPage = state.dialogEndPage,
+                            dialogEndPageError = UiText.StringResource(R.string.invalid_number)
+                        )
+                        return
+                    }
                     end.toInt() <= start.toInt() -> UiText.StringResource(R.string.end_less_than_start_error)
                     else -> null
                 }
