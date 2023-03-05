@@ -8,6 +8,10 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization'
 }
 
+def versionMajor = 1
+def versionMinor = 0
+def versionPatch = 0
+
 android {
     namespace 'com.github.ahmad_hossain.quranspacedrepetition'
     compileSdk 33
@@ -16,8 +20,8 @@ android {
         applicationId "com.github.ahmad_hossain.quranspacedrepetition"
         minSdk 21
         targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        versionCode Integer.parseInt("$versionMajor$versionMinor$versionPatch")
+        versionName "$versionMajor.$versionMinor.$versionPatch"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
