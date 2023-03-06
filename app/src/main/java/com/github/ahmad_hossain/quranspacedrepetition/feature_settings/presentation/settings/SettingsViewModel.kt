@@ -15,6 +15,7 @@ import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.data.data_so
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.repository.PageRepository
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.model.UserPreferences
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.repository.SettingsRepository
+import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.use_case.ChangePageRange
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.use_case.ValidSqlLiteDb
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -33,6 +34,7 @@ class SettingsViewModel @Inject constructor(
     private val validSqlLiteDbUseCase: ValidSqlLiteDb,
     private val db: PageDatabase,
     private val pageRepository: PageRepository,
+    private val changePageRangeUseCase: ChangePageRange,
 ) : ViewModel() {
 
     var state by mutableStateOf(SettingsState())
@@ -55,18 +57,13 @@ class SettingsViewModel @Inject constructor(
             }
             is SettingsEvent.TimePickerDismissed -> state = state.copy(isTimePickerVisible = false)
             is SettingsEvent.EditPageRangeDialogConfirmed -> {
-                val startPage = state.dialogStartPage.toInt()
-                val endPage = state.dialogEndPage.toInt()
+                val newPageRange = state.dialogStartPage.toInt()..state.dialogEndPage.toInt()
                 resetEditPageRangeDialog()
                 viewModelScope.launch(Dispatchers.IO) {
-                    dataStore.updateData { it.copy(startPage = startPage, endPage = endPage) }
-
-                    app.deleteDatabase(PageDatabase.DATABASE_NAME)
-
-                    val intent = app.packageManager.getLaunchIntentForPackage(app.packageName)
-                    intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    app.startActivity(intent)
-                    exitProcess(0)
+                    changePageRangeUseCase(newPageRange)
+                    dataStore.updateData {
+                        it.copy(startPage = newPageRange.first, endPage = newPageRange.last)
+                    }
                 }
             }
             is SettingsEvent.EditPageRangeDialogDismissed -> resetEditPageRangeDialog()

@@ -21,6 +21,9 @@ interface PageDao {
     @Update
     suspend fun updatePage(page: Page)
 
+    @Delete
+    suspend fun deletePage(page: Page)
+
     @RawQuery
     fun checkpoint(supportSQLiteQuery: SupportSQLiteQuery): Int
 }

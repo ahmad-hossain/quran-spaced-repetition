@@ -17,6 +17,14 @@ class PageRepositoryImpl(
         pageDao.updatePage(page)
     }
 
+    override suspend fun insertPage(page: Page) {
+        pageDao.insertPage(page)
+    }
+
+    override suspend fun deletePage(page: Page) {
+        pageDao.deletePage(page)
+    }
+
     override suspend fun checkpoint() {
         val checkpointQuery = "pragma wal_checkpoint(full)"
         pageDao.checkpoint(SimpleSQLiteQuery(checkpointQuery))

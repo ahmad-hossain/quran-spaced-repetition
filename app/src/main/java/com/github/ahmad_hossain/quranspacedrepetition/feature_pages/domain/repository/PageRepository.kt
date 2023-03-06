@@ -10,5 +10,9 @@ interface PageRepository {
 
     suspend fun updatePage(page: Page)
 
+    suspend fun insertPage(page: Page)
+
+    suspend fun deletePage(page: Page)
+
     suspend fun checkpoint()
 }
