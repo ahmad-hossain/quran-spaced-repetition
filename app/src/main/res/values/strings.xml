@@ -42,5 +42,5 @@
     <string name="supporting_import_data">Import revision data from an exported file</string>
     <string name="error_null_uri">Error: Uri is null</string>
     <string name="error_invalid_file">Error: Invalid File</string>
-    <string name="revision_data_reset_warning">WARNING: ALL REVISION DATA WILL BE RESET</string>
+    <string name="revision_data_reset_warning">WARNING: SOME REVISION DATA MAY BE DELETED</string>
 </resources>
