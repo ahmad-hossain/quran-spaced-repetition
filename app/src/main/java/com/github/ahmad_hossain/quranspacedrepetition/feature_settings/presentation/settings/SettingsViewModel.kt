@@ -47,7 +47,7 @@ class SettingsViewModel @Inject constructor(
 
         when (event) {
             is SettingsEvent.NotificationTimeSettingClicked -> state = state.copy(isTimePickerVisible = true)
-            is SettingsEvent.PageNumberSettingClicked -> resetEditPageRangeDialog(isVisible = true)
+            is SettingsEvent.PageNumberSettingClicked -> resetEditPageRangeDialogStates(isVisible = true)
             is SettingsEvent.TimePickerTimeChanged -> {
                 state = state.copy(isTimePickerVisible = false)
                 viewModelScope.launch {
@@ -58,7 +58,7 @@ class SettingsViewModel @Inject constructor(
             is SettingsEvent.TimePickerDismissed -> state = state.copy(isTimePickerVisible = false)
             is SettingsEvent.EditPageRangeDialogConfirmed -> {
                 val newPageRange = state.dialogStartPage.toInt()..state.dialogEndPage.toInt()
-                resetEditPageRangeDialog()
+                resetEditPageRangeDialogStates()
                 viewModelScope.launch(Dispatchers.IO) {
                     changePageRangeUseCase(newPageRange)
                     dataStore.updateData {
@@ -66,7 +66,7 @@ class SettingsViewModel @Inject constructor(
                     }
                 }
             }
-            is SettingsEvent.EditPageRangeDialogDismissed -> resetEditPageRangeDialog()
+            is SettingsEvent.EditPageRangeDialogDismissed -> resetEditPageRangeDialogStates()
             is SettingsEvent.EditPageRangeDialogStartPageChanged -> {
                 val start = event.startPage
                 val end = state.dialogEndPage
@@ -171,7 +171,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    private fun resetEditPageRangeDialog(isVisible: Boolean = false) {
+    private fun resetEditPageRangeDialogStates(isVisible: Boolean = false) {
         viewModelScope.launch {
             val prefs = dataStore.data.first()
             state = state.copy(
