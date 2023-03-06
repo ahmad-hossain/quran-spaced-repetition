@@ -18,7 +18,7 @@ class ChangePageRange @Inject constructor(
     suspend operator fun invoke(newPageRange: IntRange) = withContext(Dispatchers.IO) {
         val data = dataStore.data.first()
         val oldPageRange = data.startPage..data.endPage
-        Timber.d("newPageRange: $newPageRange oldPageRange: $oldPageRange")
+        Timber.d("oldPageRange: $oldPageRange newPageRange: $newPageRange")
 
         val pagesToAdd = newPageRange.subtract(oldPageRange)
         Timber.d("pagesToAdd: $pagesToAdd")
