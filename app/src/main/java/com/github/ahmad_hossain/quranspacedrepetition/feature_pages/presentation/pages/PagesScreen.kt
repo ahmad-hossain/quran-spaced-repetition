@@ -105,11 +105,13 @@ fun PagesScreen(
             .nestedScroll(nestedScrollConnection)
             .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
+            val containerColor = if (isListScrolled) MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp) else MaterialTheme.colorScheme.surface
             CenterAlignedTopAppBar(
                 title = { Text(stringResource(R.string.revision)) },
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    scrolledContainerColor = if (isListScrolled) MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp) else MaterialTheme.colorScheme.surface,
+                    containerColor = containerColor,
+                    scrolledContainerColor = containerColor
                 )
             )
         },
