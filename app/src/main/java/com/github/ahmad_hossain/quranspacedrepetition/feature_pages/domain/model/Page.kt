@@ -21,7 +21,7 @@ data class Page(
     /** Date this Page is due for next review, or null if never reviewed */
     val dueDate: LocalDate? = null
 ) {
-    val relativeDueDate: String
+    val relativeDueDate: String?
         get() = dueDate?.let {
             val periodTillDueDate = LocalDate.now().until(it)
             var s = ""
@@ -32,7 +32,7 @@ data class Page(
             if (periodTillDueDate.days != 0 || s.isEmpty())
                 s += "${periodTillDueDate.days}D"
             s.trim()
-        }.toString()
+        }
 
     object Converters {
         @TypeConverter

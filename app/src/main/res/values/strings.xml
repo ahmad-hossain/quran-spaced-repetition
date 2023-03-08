@@ -43,4 +43,5 @@
     <string name="error_null_uri">Error: Uri is null</string>
     <string name="error_invalid_file">Error: Invalid File</string>
     <string name="revision_data_reset_warning">WARNING: SOME REVISION DATA MAY BE DELETED</string>
+    <string name="na">N/A</string>
 </resources>
