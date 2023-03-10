@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Today
+import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -147,6 +148,8 @@ fun PagesScreen(
                 selectedTab = state.selectedTab,
                 onTabClicked = { viewModel.onEvent(PagesEvent.TabClicked(it)) }
             )
+            if (state.displayedPages.isEmpty())
+                NoPagesDueMessage()
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 contentPadding = PaddingValues(bottom = BottomBarHeight + FabHeight + ScaffoldFabSpacing * 2),
@@ -165,6 +168,29 @@ fun PagesScreen(
                     )
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun NoPagesDueMessage() {
+    BoxWithConstraints(Modifier.fillMaxSize()) {
+        Column(
+            Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Spacer(Modifier.height((this@BoxWithConstraints.maxHeight * 0.3f - BottomBarHeight)))
+            Icon(
+                modifier = Modifier.size(136.dp),
+                imageVector = Icons.Rounded.Done,
+                contentDescription = null,
+                tint = Color.Gray
+            )
+            Text(
+                text = stringResource(R.string.no_pages_due_for_review),
+                fontSize = MaterialTheme.typography.titleMedium.fontSize,
+                fontWeight = FontWeight.SemiBold,
+            )
         }
     }
 }
