@@ -82,9 +82,7 @@ fun PagesScreen(
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collect {
             when (it) {
-                is UiEvent.ScrollToIndex -> {
-                    lazyListState.scrollToItem(it.index)
-                }
+                is UiEvent.ScrollToIndex -> lazyListState.scrollToItem(it.index)
                 is UiEvent.ExpandTopAndBottomBars -> {
                     lazyListState.stopScroll()
                     scrollBehavior.nestedScrollConnection.onPreScroll(Offset.Infinite, NestedScrollSource.Drag)
