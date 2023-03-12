@@ -34,8 +34,8 @@ class PagesViewModel @Inject constructor(
         private set
     private lateinit var lastClickedPage: Page
 
-    private val _scrollToIndex = MutableSharedFlow<Int>()
-    val scrollToIndex = _scrollToIndex.asSharedFlow()
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    val uiEvent = _uiEvent.asSharedFlow()
 
     fun onEvent(event: PagesEvent) {
         Timber.d("%s : %s", event::class.simpleName, event.toString())
@@ -46,6 +46,7 @@ class PagesViewModel @Inject constructor(
                 lastClickedPage = event.page
             }
             is TabClicked -> {
+                viewModelScope.launch { _uiEvent.emit(UiEvent.ExpandTopAndBottomBars) }
                 when (event.tab) {
                     UiTabs.TODAY -> state = state.copy(
                         selectedTab = event.tab,
@@ -84,7 +85,7 @@ class PagesViewModel @Inject constructor(
                         .indexOfFirst { it.pageNumber == queriedPageNum }
                         .takeUnless { it == -1 }
                         ?: queriedPageNum.coerceIn(0, state.displayedPages.lastIndex)
-                    _scrollToIndex.emit(queriedPageIndex)
+                    _uiEvent.emit(UiEvent.ScrollToIndex(queriedPageIndex))
                 }
             }
             is SearchDialogDismissed -> resetSearchDialog()

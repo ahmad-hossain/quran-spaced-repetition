@@ -3,6 +3,7 @@ package com.github.ahmad_hossain.quranspacedrepetition.feature_pages.presentatio
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.stopScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -63,10 +64,33 @@ fun PagesScreen(
             lazyListState.firstVisibleItemIndex > 0
         }
     }
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
+    val bottomBarHeightPx = with(LocalDensity.current) { BottomBarHeight.roundToPx().toFloat() }
+    val bottomBarOffsetHeightPx = remember { mutableStateOf(0f) }
+    val nestedScrollConnection = remember {
+        object : NestedScrollConnection {
+            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+                val deltaY = available.y
+                val newOffset = bottomBarOffsetHeightPx.value + deltaY
+                bottomBarOffsetHeightPx.value = newOffset.coerceIn(-bottomBarHeightPx, 0f)
+
+                return Offset.Zero
+            }
+        }
+    }
 
     LaunchedEffect(Unit) {
-        viewModel.scrollToIndex.collect {
-            lazyListState.scrollToItem(it)
+        viewModel.uiEvent.collect {
+            when (it) {
+                is UiEvent.ScrollToIndex -> {
+                    lazyListState.scrollToItem(it.index)
+                }
+                is UiEvent.ExpandTopAndBottomBars -> {
+                    lazyListState.stopScroll()
+                    scrollBehavior.nestedScrollConnection.onPreScroll(Offset.Infinite, NestedScrollSource.Drag)
+                    nestedScrollConnection.onPreScroll(Offset.Infinite, NestedScrollSource.Drag)
+                }
+            }
         }
     }
 
@@ -87,20 +111,6 @@ fun PagesScreen(
         onSearchDialogDismissed = { viewModel.onEvent(PagesEvent.SearchDialogDismissed) },
     )
 
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-    val bottomBarHeightPx = with(LocalDensity.current) { BottomBarHeight.roundToPx().toFloat() }
-    val bottomBarOffsetHeightPx = remember { mutableStateOf(0f) }
-    val nestedScrollConnection = remember {
-        object : NestedScrollConnection {
-            override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
-                val deltaY = available.y
-                val newOffset = bottomBarOffsetHeightPx.value + deltaY
-                bottomBarOffsetHeightPx.value = newOffset.coerceIn(-bottomBarHeightPx, 0f)
-
-                return Offset.Zero
-            }
-        }
-    }
     Scaffold(
         modifier = Modifier
             .nestedScroll(nestedScrollConnection)
