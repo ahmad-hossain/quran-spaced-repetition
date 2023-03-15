@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.github.ahmad_hossain.quranspacedrepetition.BuildConfig
 import com.github.ahmad_hossain.quranspacedrepetition.R
 import com.github.ahmad_hossain.quranspacedrepetition.common.use_case.ScheduleNotificationAlarm
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.data.data_source.PageDatabase
@@ -168,7 +169,10 @@ class SettingsViewModel @Inject constructor(
                     outputStream.close()
 
                     val intent = app.packageManager.getLaunchIntentForPackage(app.packageName)
-                    intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    intent?.apply {
+                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        action = INTENT_ACTION_RESTART
+                    }
                     app.startActivity(intent)
                     exitProcess(0)
                 }
@@ -191,5 +195,9 @@ class SettingsViewModel @Inject constructor(
         dataStore.data.onEach {
             state = state.copy(userPreferences = it)
         }.launchIn(viewModelScope)
+    }
+
+    companion object {
+        const val INTENT_ACTION_RESTART = BuildConfig.APPLICATION_ID + ".RESTART"
     }
 }
