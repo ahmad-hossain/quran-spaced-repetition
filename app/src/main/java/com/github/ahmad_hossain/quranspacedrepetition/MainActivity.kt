@@ -80,12 +80,11 @@ class MainActivity : ComponentActivity() {
 
     private fun updatePageRangePref() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val data = settingsRepo.getDatastoreData().first()
             val pages = pageRepository.getPages().first()
             val minPage = async { pages.minOf { it.pageNumber } }
             val maxPage = async { pages.maxOf { it.pageNumber } }
             settingsRepo.updateDatastore {
-                data.copy(
+                it.copy(
                     startPage = minPage.await(),
                     endPage = maxPage.await()
                 )
