@@ -10,4 +10,5 @@ data class SettingsState(
     val dialogEndPage: String = "",
     val dialogStartPageError: UiText? = null,
     val dialogEndPageError: UiText? = null,
+    val isLoadingDialogVisible: Boolean = false,
 )

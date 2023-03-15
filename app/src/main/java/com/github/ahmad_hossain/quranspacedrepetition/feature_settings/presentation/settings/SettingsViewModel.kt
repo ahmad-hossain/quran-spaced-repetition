@@ -21,6 +21,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 import kotlin.system.exitProcess
@@ -57,12 +58,16 @@ class SettingsViewModel @Inject constructor(
             }
             is SettingsEvent.TimePickerDismissed -> state = state.copy(isTimePickerVisible = false)
             is SettingsEvent.EditPageRangeDialogConfirmed -> {
+                state = state.copy(isLoadingDialogVisible = true)
                 val newPageRange = state.dialogStartPage.toInt()..state.dialogEndPage.toInt()
                 resetEditPageRangeDialogStates()
                 viewModelScope.launch(Dispatchers.IO) {
-                    changePageRangeUseCase(newPageRange)
+                    changePageRangeUseCase(newPageRange).join()
                     dataStore.updateData {
                         it.copy(startPage = newPageRange.first, endPage = newPageRange.last)
+                    }
+                    withContext(Dispatchers.Main) {
+                        state = state.copy(isLoadingDialogVisible = false)
                     }
                 }
             }

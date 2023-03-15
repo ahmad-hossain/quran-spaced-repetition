@@ -45,4 +45,5 @@
     <string name="revision_data_reset_warning">WARNING: SOME REVISION DATA MAY BE DELETED</string>
     <string name="na">N/A</string>
     <string name="no_pages_due_for_review">No Pages Due For Review</string>
+    <string name="applying_setting">Applying Setting…</string>
 </resources>

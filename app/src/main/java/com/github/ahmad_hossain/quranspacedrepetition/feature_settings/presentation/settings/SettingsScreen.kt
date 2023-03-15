@@ -22,6 +22,7 @@ import com.github.ahmad_hossain.quranspacedrepetition.R
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.presentation.components.CustomBottomBar
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.presentation.components.Screen
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.presentation.settings.components.EditPageRangeDialog
+import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.presentation.settings.components.LoadingDialog
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.presentation.settings.components.SettingsSectionHeadline
 import com.marosseleng.compose.material3.datetimepickers.time.ui.dialog.TimePickerDialog
 import com.ramcosta.composedestinations.annotation.Destination
@@ -73,6 +74,10 @@ fun SettingsScreen(
         onEndPageChanged = { viewModel.onEvent(SettingsEvent.EditPageRangeDialogEndPageChanged(it)) },
         onDismissRequest = { viewModel.onEvent(SettingsEvent.EditPageRangeDialogDismissed) },
         onConfirmClicked = { viewModel.onEvent(SettingsEvent.EditPageRangeDialogConfirmed) }
+    )
+    LoadingDialog(
+        isVisible = state.isLoadingDialogVisible,
+        text = stringResource(id = R.string.applying_setting)
     )
 
     Scaffold(
