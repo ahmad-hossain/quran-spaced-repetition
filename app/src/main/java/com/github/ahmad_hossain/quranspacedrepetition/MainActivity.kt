@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<PagesViewModel>()
     @Inject lateinit var notificationManager: NotificationManagerCompat
     @Inject lateinit var dataStore: DataStore<UserPreferences>
-    @Inject lateinit var pageReposiory: PageRepository
+    @Inject lateinit var pageRepository: PageRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,7 +82,7 @@ class MainActivity : ComponentActivity() {
     private fun updatePageRangePref() {
         lifecycleScope.launch(Dispatchers.IO) {
             val data = dataStore.data.first()
-            val pages = pageReposiory.getPages().first()
+            val pages = pageRepository.getPages().first()
             val minPage = async { pages.minOf { it.pageNumber } }
             val maxPage = async { pages.maxOf { it.pageNumber } }
             dataStore.updateData { data.copy(startPage = minPage.await(), endPage = maxPage.await()) }
