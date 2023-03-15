@@ -20,7 +20,10 @@ import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.model
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.receiver.AlarmReceiver
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.repository.PageRepository
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.data.data_source.UserPreferencesSerializer
+import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.data.repository.SettingsRepositoryImpl
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.model.UserPreferences
+import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.repository.SettingsRepository
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,63 +36,68 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+interface AppModule {
 
-    @Provides
-    @Singleton
-    fun providePageRepository(db: PageDatabase): PageRepository = PageRepositoryImpl(db.pageDao)
+    @Binds
+    fun bindSettingsRepository(impl: SettingsRepositoryImpl): SettingsRepository
 
-    @Provides
-    @Singleton
-    fun providePageDatabase(app: Application): PageDatabase {
-        return Room.databaseBuilder(
-            app,
-            PageDatabase::class.java,
-            PageDatabase.DATABASE_NAME
-        ).addCallback(object : RoomDatabase.Callback() {
-            override fun onCreate(db: SupportSQLiteDatabase) {
-                Timber.d("onCreate RoomDatabase")
-                super.onCreate(db)
+    companion object {
+        @Provides
+        @Singleton
+        fun providePageRepository(db: PageDatabase): PageRepository = PageRepositoryImpl(db.pageDao)
 
-                runBlocking {
-                    val userPrefs = app.dataStore.data.first()
-                    val defaultPage = Page(pageNumber = 0)
+        @Provides
+        @Singleton
+        fun providePageDatabase(app: Application): PageDatabase {
+            return Room.databaseBuilder(
+                app,
+                PageDatabase::class.java,
+                PageDatabase.DATABASE_NAME
+            ).addCallback(object : RoomDatabase.Callback() {
+                override fun onCreate(db: SupportSQLiteDatabase) {
+                    Timber.d("onCreate RoomDatabase")
+                    super.onCreate(db)
 
-                    (userPrefs.startPage..userPrefs.endPage).forEach { pageNum ->
-                        db.execSQL("INSERT INTO Page VALUES ($pageNum, ${defaultPage.interval}, ${defaultPage.repetitions}, ${defaultPage.eFactor}, ${defaultPage.dueDate})")
+                    runBlocking {
+                        val userPrefs = app.dataStore.data.first()
+                        val defaultPage = Page(pageNumber = 0)
+
+                        (userPrefs.startPage..userPrefs.endPage).forEach { pageNum ->
+                            db.execSQL("INSERT INTO Page VALUES ($pageNum, ${defaultPage.interval}, ${defaultPage.repetitions}, ${defaultPage.eFactor}, ${defaultPage.dueDate})")
+                        }
                     }
                 }
-            }
-        }).build()
-    }
-
-    @Provides
-    fun provideNotificationManagerCompat(@ApplicationContext context: Context) =
-        NotificationManagerCompat.from(context)
-
-    @Provides
-    fun provideAlarmManager(@ApplicationContext context: Context) =
-        context.getSystemService(ComponentActivity.ALARM_SERVICE) as AlarmManager
-
-    /** Already doing API Check */
-    @SuppressLint("InlinedApi")
-    @Provides
-    fun provideAlarmPendingIntent(@ApplicationContext context: Context): PendingIntent {
-        val intent = Intent(context, AlarmReceiver::class.java)
-        val flags = when (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            true -> PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-            false -> PendingIntent.FLAG_UPDATE_CURRENT
+            }).build()
         }
-        return PendingIntent.getBroadcast(context, 0, intent, flags)
-    }
 
-    private val Context.dataStore: DataStore<UserPreferences> by dataStore(
-        fileName = "user-prefs.json",
-        serializer = UserPreferencesSerializer
-    )
+        @Provides
+        fun provideNotificationManagerCompat(@ApplicationContext context: Context) =
+            NotificationManagerCompat.from(context)
 
-    @Provides
-    fun provideDataStore(appContext: Application): DataStore<UserPreferences> {
-        return appContext.dataStore
+        @Provides
+        fun provideAlarmManager(@ApplicationContext context: Context) =
+            context.getSystemService(ComponentActivity.ALARM_SERVICE) as AlarmManager
+
+        /** Already doing API Check */
+        @SuppressLint("InlinedApi")
+        @Provides
+        fun provideAlarmPendingIntent(@ApplicationContext context: Context): PendingIntent {
+            val intent = Intent(context, AlarmReceiver::class.java)
+            val flags = when (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                true -> PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                false -> PendingIntent.FLAG_UPDATE_CURRENT
+            }
+            return PendingIntent.getBroadcast(context, 0, intent, flags)
+        }
+
+        private val Context.dataStore: DataStore<UserPreferences> by dataStore(
+            fileName = "user-prefs.json",
+            serializer = UserPreferencesSerializer
+        )
+
+        @Provides
+        fun provideDataStore(appContext: Application): DataStore<UserPreferences> {
+            return appContext.dataStore
+        }
     }
 }

@@ -7,10 +7,9 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.os.Build
 import androidx.core.app.NotificationManagerCompat
-import androidx.datastore.core.DataStore
 import com.github.ahmad_hossain.quranspacedrepetition.common.di.IoDispatcher
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.use_case.UpdateReminderNotification
-import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.model.UserPreferences
+import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.repository.SettingsRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
 import timber.log.Timber
@@ -22,7 +21,7 @@ class ScheduleNotificationAlarm @Inject constructor(
     private val alarmPendingIntent: PendingIntent,
     private val notificationManager: NotificationManagerCompat,
     private val alarmManager: AlarmManager,
-    private val dataStore: DataStore<UserPreferences>,
+    private val settingsRepo: SettingsRepository,
     @IoDispatcher private val dispatcher: CoroutineDispatcher,
 ) {
 
@@ -34,7 +33,7 @@ class ScheduleNotificationAlarm @Inject constructor(
             return@launch
         }
 
-        val notificationTimePref = dataStore.data.first().notificationTime
+        val notificationTimePref = settingsRepo.getDatastoreData().first().notificationTime
 
         val shouldScheduleToday = LocalTime.now().isBefore(notificationTimePref)
         val dateOffset = if (shouldScheduleToday) 0 else 1

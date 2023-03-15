@@ -8,8 +8,9 @@ import javax.inject.Inject
 class SettingsRepositoryImpl @Inject constructor(
     private val dataStore: DataStore<UserPreferences>
 ) : SettingsRepository {
+    override fun getDatastoreData() = dataStore.data
 
-    override suspend fun updateDatastore(pref: UserPreferences) {
-        dataStore.updateData { pref }
+    override suspend fun updateDatastore(transform: suspend (t: UserPreferences) -> UserPreferences) {
+        dataStore.updateData(transform)
     }
 }

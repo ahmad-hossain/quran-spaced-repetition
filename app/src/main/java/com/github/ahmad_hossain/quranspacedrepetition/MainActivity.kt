@@ -12,13 +12,12 @@ import androidx.compose.material3.Surface
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.lifecycleScope
 import com.github.ahmad_hossain.quranspacedrepetition.common.use_case.ScheduleNotificationAlarm
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.repository.PageRepository
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.use_case.UpdateReminderNotification
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.presentation.pages.PagesViewModel
-import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.model.UserPreferences
+import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.repository.SettingsRepository
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.presentation.settings.SettingsViewModel
 import com.github.ahmad_hossain.quranspacedrepetition.ui.theme.QuranSpacedRepetitionTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
@@ -35,7 +34,7 @@ class MainActivity : ComponentActivity() {
     @Inject lateinit var scheduleNotificationAlarm: ScheduleNotificationAlarm
     private val viewModel by viewModels<PagesViewModel>()
     @Inject lateinit var notificationManager: NotificationManagerCompat
-    @Inject lateinit var dataStore: DataStore<UserPreferences>
+    @Inject lateinit var settingsRepo: SettingsRepository
     @Inject lateinit var pageRepository: PageRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,11 +80,16 @@ class MainActivity : ComponentActivity() {
 
     private fun updatePageRangePref() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val data = dataStore.data.first()
+            val data = settingsRepo.getDatastoreData().first()
             val pages = pageRepository.getPages().first()
             val minPage = async { pages.minOf { it.pageNumber } }
             val maxPage = async { pages.maxOf { it.pageNumber } }
-            dataStore.updateData { data.copy(startPage = minPage.await(), endPage = maxPage.await()) }
+            settingsRepo.updateDatastore {
+                data.copy(
+                    startPage = minPage.await(),
+                    endPage = maxPage.await()
+                )
+            }
         }
     }
 }

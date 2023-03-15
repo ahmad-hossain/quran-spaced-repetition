@@ -6,7 +6,6 @@ import android.content.Intent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.ahmad_hossain.quranspacedrepetition.BuildConfig
@@ -14,7 +13,6 @@ import com.github.ahmad_hossain.quranspacedrepetition.R
 import com.github.ahmad_hossain.quranspacedrepetition.common.use_case.ScheduleNotificationAlarm
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.data.data_source.PageDatabase
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.repository.PageRepository
-import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.model.UserPreferences
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.repository.SettingsRepository
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.use_case.ChangePageRange
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.use_case.ValidSqlLiteDb
@@ -29,8 +27,7 @@ import kotlin.system.exitProcess
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    private val settingsRepository: SettingsRepository,
-    private val dataStore: DataStore<UserPreferences>,
+    private val settingsRepo: SettingsRepository,
     private val scheduleNotificationAlarmUseCase: ScheduleNotificationAlarm,
     private val app: Application,
     private val validSqlLiteDbUseCase: ValidSqlLiteDb,
@@ -53,7 +50,7 @@ class SettingsViewModel @Inject constructor(
             is SettingsEvent.TimePickerTimeChanged -> {
                 state = state.copy(isTimePickerVisible = false)
                 viewModelScope.launch {
-                    settingsRepository.updateDatastore(state.userPreferences.copy(notificationTime = event.time))
+                    settingsRepo.updateDatastore { it.copy(notificationTime = event.time) }
                     scheduleNotificationAlarmUseCase()
                 }
             }
@@ -64,7 +61,7 @@ class SettingsViewModel @Inject constructor(
                 resetEditPageRangeDialogStates()
                 viewModelScope.launch(Dispatchers.IO) {
                     changePageRangeUseCase(newPageRange).join()
-                    dataStore.updateData {
+                    settingsRepo.updateDatastore {
                         it.copy(startPage = newPageRange.first, endPage = newPageRange.last)
                     }
                     withContext(Dispatchers.Main) {
@@ -182,7 +179,7 @@ class SettingsViewModel @Inject constructor(
 
     private fun resetEditPageRangeDialogStates(isVisible: Boolean = false) {
         viewModelScope.launch {
-            val prefs = dataStore.data.first()
+            val prefs = settingsRepo.getDatastoreData().first()
             state = state.copy(
                 isEditPageRangeDialogVisible = isVisible,
                 dialogStartPage = prefs.startPage.toString(),
@@ -192,7 +189,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     init {
-        dataStore.data.onEach {
+        settingsRepo.getDatastoreData().onEach {
             state = state.copy(userPreferences = it)
         }.launchIn(viewModelScope)
     }
