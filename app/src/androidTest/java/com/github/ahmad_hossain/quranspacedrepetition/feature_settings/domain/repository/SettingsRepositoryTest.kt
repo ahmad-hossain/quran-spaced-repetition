@@ -48,7 +48,7 @@ class SettingsRepositoryTest {
             endPage = 2,
             notificationTime = LocalTime.of(3, 4)
         )
-        repository.updateDatastore(userPref)
+        repository.updateDatastore { userPref }
         assertThat(testDataStore.data.first()).isEqualTo(userPref)
     }
 
