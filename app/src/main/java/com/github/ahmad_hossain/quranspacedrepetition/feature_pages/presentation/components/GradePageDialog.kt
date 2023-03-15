@@ -9,6 +9,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.ahmad_hossain.quranspacedrepetition.R
@@ -22,6 +24,7 @@ data class GradeOption(
 @Composable
 fun GradePageDialog(
     modifier: Modifier = Modifier,
+    pageNumber: Int,
     isVisible: Boolean,
     onDismissRequest: () -> Unit,
     onConfirm: () -> Unit,
@@ -81,6 +84,13 @@ fun GradePageDialog(
             val dividerColor = LocalContentColor.current.copy(alpha = 0.7f)
 
             Column {
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = pageNumber.toString(),
+                    textAlign = TextAlign.Center,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                Spacer(Modifier.height(16.dp))
                 Divider(color = dividerColor)
                 Column(Modifier.verticalScroll(rememberScrollState())) {
                     gradeOptions.forEachIndexed { index, gradeOption ->
@@ -107,6 +117,7 @@ fun GradePageDialog(
 fun PreviewGradingDialog() {
     GradePageDialog(
         isVisible = true,
+        pageNumber = 27,
         onDismissRequest = {},
         onConfirm = {},
         onDismiss = {},

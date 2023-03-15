@@ -42,8 +42,11 @@ class PagesViewModel @Inject constructor(
 
         when (event) {
             is PageClicked -> {
-                state = state.copy(isGradeDialogVisible = true)
                 lastClickedPage = event.page
+                state = state.copy(
+                    isGradeDialogVisible = true,
+                    lastClickedPageNumber = lastClickedPage.pageNumber
+                )
             }
             is TabClicked -> {
                 viewModelScope.launch { _uiEvent.emit(UiEvent.ExpandTopAndBottomBars) }

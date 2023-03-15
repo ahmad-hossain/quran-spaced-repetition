@@ -94,6 +94,7 @@ fun PagesScreen(
 
     GradePageDialog(
         isVisible = state.isGradeDialogVisible,
+        pageNumber = state.lastClickedPageNumber,
         onDismissRequest = { viewModel.onEvent(PagesEvent.GradeDialogDismissed) },
         onConfirm = { viewModel.onEvent(PagesEvent.GradeDialogConfirmed) },
         onDismiss = { viewModel.onEvent(PagesEvent.GradeDialogDismissed) },

@@ -9,6 +9,7 @@ data class PagesState(
     val pagesDueToday: List<Page> = emptyList(),
     val selectedTab: UiTabs = UiTabs.TODAY,
     val isGradeDialogVisible: Boolean = false,
+    val lastClickedPageNumber: Int = -1,
     val selectedGrade: Int = 5,
     val isSearchDialogVisible: Boolean = false,
     val searchQuery: String = "",
