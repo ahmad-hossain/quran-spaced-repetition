@@ -46,4 +46,9 @@
     <string name="na">N/A</string>
     <string name="no_pages_due_for_review">No Pages Due For Review</string>
     <string name="applying_setting">Applying Setting…</string>
+    <string name="allow">Allow</string>
+    <string name="to">to</string>
+    <string name="schedule_alarms">Schedule Alarms</string>
+    <string name="alarm_permission_dialog_text">needs the Alarm permission to schedule the daily review reminder notification</string>
+    <string name="go_to_settings">Go to Settings</string>
 </resources>

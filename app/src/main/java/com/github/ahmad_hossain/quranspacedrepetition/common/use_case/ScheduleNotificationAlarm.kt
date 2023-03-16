@@ -28,8 +28,10 @@ class ScheduleNotificationAlarm @Inject constructor(
     /** USE_EXACT_ALARM permission can substitute for SCHEDULE_EXACT_ALARM */
     @SuppressLint("MissingPermission")
     operator fun invoke() = CoroutineScope(Job() + dispatcher).launch {
-        if (!canShowReminderNotification()) {
-            Timber.d("invoke: Can't show review reminder notification; exiting alarm use-case")
+        val canScheduleExactAlarms = Build.VERSION.SDK_INT < Build.VERSION_CODES.S || alarmManager.canScheduleExactAlarms()
+        val canShowReminderNotif = canShowReminderNotification()
+        if (!canShowReminderNotif || !canScheduleExactAlarms) {
+            Timber.d("canShowReminderNotif=$canShowReminderNotif, canScheduleExactAlarms=$canScheduleExactAlarms")
             return@launch
         }
 
