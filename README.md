@@ -7,7 +7,6 @@ Android app that utilizes spaced repetition to assist with retaining memorized Q
 * [Why You Should Use](#why-you-should-use)
 * [Links](#links)
 * [App Overview](#app-overview)
-    * [Video Walkthrough](#video-walkthrough)
     * [Features](#features)
     * [Screens](#screens)
         * [Home](#home-screen)
