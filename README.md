@@ -47,6 +47,8 @@ This screen contains two sections, the "Today" Tab, and the "All" Tab.
 
 #### Today Tab
 
+<img src="screenshots/today_tab.png" width="200"/>
+
 This tab lists revision information far all Quran pages due for review 'today'.
 
 To review a due page, click the page to open the page-grading-dialog, and select the appropriate
@@ -58,6 +60,8 @@ tab.
 
 #### All Tab
 
+<img src="screenshots/all_tab.png" width="200"/>
+
 This tab lists revision information far all Quran pages, and is used for:
 
 * Viewing your revision information for any Quran page.
@@ -66,6 +70,8 @@ This tab lists revision information far all Quran pages, and is used for:
   pages.
 
 ### Settings Screen
+
+<img src="screenshots/settings_screen.png" width="200"/>
 
 This screen allows you to configure various settings for the app.
 
@@ -79,6 +85,8 @@ This screen allows you to configure various settings for the app.
 # Tutorials
 
 ## Reviewing Pages
+
+<img src="screenshots/grade_dialog.png" width="200"/>
 
 1. The first step to marking a revision/initial-memorization is to recite the respective page
    from memory. \
