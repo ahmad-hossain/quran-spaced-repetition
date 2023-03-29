@@ -86,7 +86,7 @@ This screen allows you to configure various settings for the app.
    You should be reciting 100% from memory, otherwise this app will not be as effective.
 
 2. Once you have recited the page from memory, you are ready to mark that in the app. Navigate to
-   the correct Tab in the Home Screen, and click on the row for the respective page. \
+   the correct Tab in the Home Screen, and click on the row for the respective page.
 
    Note: If you have just memorized a page for the 1st time, you will be doing this from the "All"
    Tab in the Home Screen. On the other hand, if you are reviewing a page that is due for review,
