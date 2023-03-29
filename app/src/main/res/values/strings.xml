@@ -12,8 +12,8 @@
     <string name="grade_5_desc">Perfect response</string>
     <string name="grade_4_desc">Correct response after a hesitation</string>
     <string name="grade_3_desc">Correct response recalled with serious difficulty</string>
-    <string name="grade_2_desc">Incorrect response; where the correct one seemed easy to recall</string>
-    <string name="grade_1_desc">Incorrect response; the correct one remembered</string>
+    <string name="grade_2_desc"><![CDATA[Forgetting mistake(s); the correct answer makes you say <i>I knew it!</i>]]></string>
+    <string name="grade_1_desc">Forgetting mistake(s); correct answer seemed familiar</string>
     <string name="grade_0_desc">Complete blackout</string>
     <string name="assign_grade">Assign Grade</string>
     <string name="reminder_notification_channel_name">Quran Review Reminder</string>
