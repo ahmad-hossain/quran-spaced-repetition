@@ -1,5 +1,6 @@
 package com.github.ahmad_hossain.quranspacedrepetition.feature_pages.presentation.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -17,8 +18,34 @@ import com.github.ahmad_hossain.quranspacedrepetition.R
 
 data class GradeOption(
     val grade: Int,
-    val text: String,
-    val onSelectGrade: (Int) -> Unit,
+    @StringRes val textRes: Int,
+)
+
+private val gradeOptions = listOf(
+    GradeOption(
+        grade = 5,
+        textRes = R.string.grade_5_desc,
+    ),
+    GradeOption(
+        grade = 4,
+        textRes = R.string.grade_4_desc,
+    ),
+    GradeOption(
+        grade = 3,
+        textRes = R.string.grade_3_desc,
+    ),
+    GradeOption(
+        grade = 2,
+        textRes = R.string.grade_2_desc,
+    ),
+    GradeOption(
+        grade = 1,
+        textRes = R.string.grade_1_desc,
+    ),
+    GradeOption(
+        grade = 0,
+        textRes = R.string.grade_0_desc,
+    ),
 )
 
 @Composable
@@ -33,38 +60,6 @@ fun GradePageDialog(
     onSelectGrade: (Int) -> Unit,
 ) {
     if (!isVisible) return
-    val gradeOptions = listOf(
-        GradeOption(
-            grade = 5,
-            text = stringResource(R.string.grade_5_desc),
-            onSelectGrade = onSelectGrade,
-        ),
-        GradeOption(
-            grade = 4,
-            text = stringResource(R.string.grade_4_desc),
-            onSelectGrade = onSelectGrade,
-        ),
-        GradeOption(
-            grade = 3,
-            text = stringResource(R.string.grade_3_desc),
-            onSelectGrade = onSelectGrade,
-        ),
-        GradeOption(
-            grade = 2,
-            text = stringResource(R.string.grade_2_desc),
-            onSelectGrade = onSelectGrade,
-        ),
-        GradeOption(
-            grade = 1,
-            text = stringResource(R.string.grade_1_desc),
-            onSelectGrade = onSelectGrade,
-        ),
-        GradeOption(
-            grade = 0,
-            text = stringResource(R.string.grade_0_desc),
-            onSelectGrade = onSelectGrade,
-        ),
-    )
 
     AlertDialog(
         modifier = modifier,
@@ -99,9 +94,9 @@ fun GradePageDialog(
                         GradePageDialogOption(
                             modifier = Modifier.fillMaxWidth(),
                             selected = selectedGrade == gradeOption.grade,
-                            onSelect = { gradeOption.onSelectGrade(gradeOption.grade) },
+                            onSelect = { onSelectGrade(gradeOption.grade) },
                             grade = gradeOption.grade,
-                            description = gradeOption.text,
+                            description = stringResource(gradeOption.textRes),
                         )
                     }
                 }
