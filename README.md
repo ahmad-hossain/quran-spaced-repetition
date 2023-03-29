@@ -29,13 +29,9 @@ Android app that utilizes spaced repetition to assist with retaining memorized Q
 
 # Links
 
-TODO Google Play Store Link
+[Google Play Store](https://play.google.com/store/apps/details?id=com.github.ahmad_hossain.quranspacedrepetition)
 
 # App Overview
-
-## Video Walkthrough
-
-TODO
 
 ## Features
 
