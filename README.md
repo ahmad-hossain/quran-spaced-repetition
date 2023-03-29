@@ -55,6 +55,8 @@ grade that represents your strength during your review. See [Reviewing Pages](#r
 more details and guidance. Once a page has been reviewed, the app will be removed from the 'today'
 tab.
 
+**NOTE:** Ensure you always complete your due pages! Prioritize reviewing your due-pages over memorizing new pages to ensure your reviewed pages stay strong in your memory. There is no point in memorizing new pages if you are not going to retain all of them!!
+
 #### All Tab
 
 This tab lists revision information far all Quran pages, and is used for:
