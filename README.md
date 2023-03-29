@@ -1,6 +1,6 @@
 # Quran Spaced Repetition
 
-Android app that utilizes spaced repetition to assist with retaining memorized Quran pages
+Published Android app that utilizes spaced repetition to assist with retaining memorized pages from the Holy Quran
 
 # Index
 
