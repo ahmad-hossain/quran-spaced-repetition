@@ -96,7 +96,7 @@ fun GradePageDialog(
                             selected = selectedGrade == gradeOption.grade,
                             onSelect = { onSelectGrade(gradeOption.grade) },
                             grade = gradeOption.grade,
-                            descriptionRes = gradeOption.textRes
+                            description = stringResource(gradeOption.textRes),
                         )
                     }
                 }
