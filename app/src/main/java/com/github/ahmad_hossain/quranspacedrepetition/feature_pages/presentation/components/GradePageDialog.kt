@@ -18,32 +18,39 @@ import com.github.ahmad_hossain.quranspacedrepetition.R
 
 data class GradeOption(
     val grade: Int,
+    val emoji: String,
     @StringRes val textRes: Int,
 )
 
 private val gradeOptions = listOf(
     GradeOption(
         grade = 5,
+        emoji = "😎",
         textRes = R.string.grade_5_desc,
     ),
     GradeOption(
         grade = 4,
+        emoji = "🙂",
         textRes = R.string.grade_4_desc,
     ),
     GradeOption(
         grade = 3,
+        emoji = "☹️",
         textRes = R.string.grade_3_desc,
     ),
     GradeOption(
         grade = 2,
+        emoji = "😢",
         textRes = R.string.grade_2_desc,
     ),
     GradeOption(
         grade = 1,
+        emoji = "😭",
         textRes = R.string.grade_1_desc,
     ),
     GradeOption(
         grade = 0,
+        emoji = "💀",
         textRes = R.string.grade_0_desc,
     ),
 )
@@ -74,7 +81,7 @@ fun GradePageDialog(
                 Text(stringResource(R.string.cancel))
             }
         },
-        title = { Text(stringResource(R.string.assign_grade)) },
+        title = { Text(stringResource(R.string.grade_your_review)) },
         text = {
             val dividerColor = LocalContentColor.current.copy(alpha = 0.7f)
 
@@ -95,7 +102,7 @@ fun GradePageDialog(
                             modifier = Modifier.fillMaxWidth(),
                             selected = selectedGrade == gradeOption.grade,
                             onSelect = { onSelectGrade(gradeOption.grade) },
-                            grade = gradeOption.grade,
+                            emoji = gradeOption.emoji,
                             description = stringResource(gradeOption.textRes),
                         )
                     }

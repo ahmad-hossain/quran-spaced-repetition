@@ -2,24 +2,24 @@ package com.github.ahmad_hossain.quranspacedrepetition.feature_pages.presentatio
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun GradePageDialogOption(
     modifier: Modifier = Modifier,
     selected: Boolean,
     onSelect: () -> Unit,
-    grade: Int,
+    emoji: String,
     description: String,
 ) {
     Row(
@@ -33,11 +33,10 @@ fun GradePageDialogOption(
             onClick = onSelect
         )
         Text(
-            text = grade.toString(),
-            fontSize = MaterialTheme.typography.bodyLarge.fontSize,
-            fontWeight = FontWeight.Bold,
+            text = emoji,
+            fontSize = 18.sp,
         )
-        Text(modifier = Modifier.padding(horizontal = 4.dp), text = "-")
+        Spacer(Modifier.width(8.dp))
         Text(description)
     }
 }
