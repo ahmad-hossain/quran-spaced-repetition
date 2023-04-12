@@ -11,18 +11,20 @@ import androidx.activity.ComponentActivity
 import androidx.core.app.NotificationManagerCompat
 import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
-import androidx.room.Room
-import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.data.data_source.PageDatabase
+import app.cash.sqldelight.adapter.primitive.IntColumnAdapter
+import app.cash.sqldelight.db.SqlDriver
+import app.cash.sqldelight.driver.android.AndroidSqliteDriver
+import com.github.ahmad_hossain.quranspacedrepetition.PageDatabase
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.data.repository.PageRepositoryImpl
-import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.model.Page
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.receiver.AlarmReceiver
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.repository.PageRepository
+import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.util.PageUtil
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.data.data_source.UserPreferencesSerializer
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.data.repository.SettingsRepositoryImpl
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.model.UserPreferences
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.repository.SettingsRepository
+import comgithubahmadhossainquranspacedrepetition.Page
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -31,7 +33,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.first
-import timber.log.Timber
 import javax.inject.Singleton
 
 @Module
@@ -44,30 +45,47 @@ interface AppModule {
     companion object {
         @Provides
         @Singleton
-        fun providePageRepository(db: PageDatabase): PageRepository = PageRepositoryImpl(db.pageDao)
+        fun provideSqlDriver(app: Application): SqlDriver =
+            AndroidSqliteDriver(
+                schema = PageDatabase.Schema,
+                context = app.applicationContext,
+                name = PageUtil.DATABASE_NAME,
+                callback = object : AndroidSqliteDriver.Callback(PageDatabase.Schema) {
+                    override fun onConfigure(db: SupportSQLiteDatabase) {
+                        super.onConfigure(db)
+                        db.enableWriteAheadLogging()
+                    }
 
-        @Provides
-        @Singleton
-        fun providePageDatabase(app: Application): PageDatabase {
-            return Room.databaseBuilder(
-                app,
-                PageDatabase::class.java,
-                PageDatabase.DATABASE_NAME
-            ).addCallback(object : RoomDatabase.Callback() {
-                override fun onCreate(db: SupportSQLiteDatabase) {
-                    Timber.d("onCreate RoomDatabase")
-                    super.onCreate(db)
+                    override fun onCreate(db: SupportSQLiteDatabase) {
+                        super.onCreate(db)
 
-                    runBlocking {
-                        val userPrefs = app.dataStore.data.first()
-                        val defaultPage = Page(pageNumber = 0)
+                        runBlocking {
+                            val userPrefs = app.dataStore.data.first()
+                            val defaultPage = PageUtil.defaultPage(pageNumber = 0)
 
-                        (userPrefs.startPage..userPrefs.endPage).forEach { pageNum ->
-                            db.execSQL("INSERT INTO Page VALUES ($pageNum, ${defaultPage.interval}, ${defaultPage.repetitions}, ${defaultPage.eFactor}, ${defaultPage.dueDate})")
+                            (userPrefs.startPage..userPrefs.endPage).forEach { pageNum ->
+                                db.execSQL("INSERT INTO Page VALUES ($pageNum, ${defaultPage.interval}, ${defaultPage.repetitions}, ${defaultPage.eFactor}, ${defaultPage.dueDate})")
+                            }
                         }
                     }
                 }
-            }).build()
+            )
+
+        @Provides
+        @Singleton
+        fun providePageRepository(db: PageDatabase, driver: SqlDriver): PageRepository =
+            PageRepositoryImpl(db, driver)
+
+        @Provides
+        @Singleton
+        fun providePageDatabase(driver: SqlDriver): PageDatabase {
+            return PageDatabase(
+                driver, Page.Adapter(
+                    pageNumberAdapter = IntColumnAdapter,
+                    intervalAdapter = IntColumnAdapter,
+                    repetitionsAdapter = IntColumnAdapter
+                )
+            )
         }
 
         @Provides

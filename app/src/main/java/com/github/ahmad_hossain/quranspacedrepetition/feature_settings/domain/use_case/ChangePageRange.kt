@@ -1,7 +1,7 @@
 package com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.use_case
 
-import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.model.Page
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.repository.PageRepository
+import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.util.PageUtil
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.repository.SettingsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -24,14 +24,14 @@ class ChangePageRange @Inject constructor(
             val pagesToAdd = newPageRange.subtract(oldPageRange)
             Timber.d("pagesToAdd: $pagesToAdd")
             pagesToAdd.forEach {
-                pageRepo.insertPage(Page(pageNumber = it))
+                pageRepo.insertPage(PageUtil.defaultPage(pageNumber = it))
             }
         }
         launch {
             val pagesToDelete = oldPageRange.subtract(newPageRange)
             Timber.d("pagesToDelete: $pagesToDelete")
             pagesToDelete.forEach {
-                pageRepo.deletePage(Page(pageNumber = it))
+                pageRepo.deletePage(PageUtil.defaultPage(pageNumber = it))
             }
         }
     }

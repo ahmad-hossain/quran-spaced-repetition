@@ -10,8 +10,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.ahmad_hossain.quranspacedrepetition.R
 import com.github.ahmad_hossain.quranspacedrepetition.common.use_case.ScheduleNotificationAlarm
-import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.model.Page
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.repository.PageRepository
+import comgithubahmadhossainquranspacedrepetition.Page
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first

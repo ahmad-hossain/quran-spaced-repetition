@@ -6,12 +6,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.github.ahmad_hossain.quranspacedrepetition.R
-import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.model.Page
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.repository.PageRepository
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.use_case.SuperMemo
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.use_case.UpdateReminderNotification
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.presentation.pages.PagesEvent.*
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.presentation.settings.UiText
+import comgithubahmadhossainquranspacedrepetition.Page
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -70,7 +70,7 @@ class PagesViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     repository.updatePage(
                         updatedPage.copy(
-                            dueDate = LocalDate.now().plusDays(updatedPage.interval.toLong())
+                            dueDate = LocalDate.now().plusDays(updatedPage.interval.toLong()).toEpochDay()
                         )
                     )
                     if (state.pagesDueToday.contains(lastClickedPage))

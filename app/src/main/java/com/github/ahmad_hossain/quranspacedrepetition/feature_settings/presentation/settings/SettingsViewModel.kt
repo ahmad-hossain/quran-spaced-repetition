@@ -8,11 +8,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import app.cash.sqldelight.db.SqlDriver
 import com.github.ahmad_hossain.quranspacedrepetition.BuildConfig
 import com.github.ahmad_hossain.quranspacedrepetition.R
 import com.github.ahmad_hossain.quranspacedrepetition.common.use_case.ScheduleNotificationAlarm
-import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.data.data_source.PageDatabase
-import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.repository.PageRepository
+import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.util.PageUtil
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.repository.SettingsRepository
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.use_case.ChangePageRange
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.use_case.ValidSqlLiteDb
@@ -31,8 +31,7 @@ class SettingsViewModel @Inject constructor(
     private val scheduleNotificationAlarmUseCase: ScheduleNotificationAlarm,
     private val app: Application,
     private val validSqlLiteDbUseCase: ValidSqlLiteDb,
-    private val db: PageDatabase,
-    private val pageRepository: PageRepository,
+    private val driver: SqlDriver,
     private val changePageRangeUseCase: ChangePageRange,
 ) : ViewModel() {
 
@@ -135,12 +134,16 @@ class SettingsViewModel @Inject constructor(
                 }
 
                 viewModelScope.launch(Dispatchers.IO) {
-                    pageRepository.checkpoint()
+                    // TODO checkpoint not working programatically; export only working after initial restart
+//                    pageRepository.checkpoint() // does not do anything
+//                    driver.close() // works but database is closed so need to restart app
+//                    pageRepository.setJournalMode("DELETE") // did nothing
 
-                    val inputStream = app.getDatabasePath(PageDatabase.DATABASE_NAME).inputStream()
+                    val inputStream = app.getDatabasePath(PageUtil.DATABASE_NAME).inputStream()
                     val outputStream = app.contentResolver.openOutputStream(userChosenUri) ?: return@launch
 
                     inputStream.copyTo(outputStream)
+                    Timber.d("export: copied file")
 
                     inputStream.close()
                     outputStream.close()
@@ -156,10 +159,10 @@ class SettingsViewModel @Inject constructor(
                 }
 
                 viewModelScope.launch(Dispatchers.IO) {
-                    db.close()
+                    driver.close()
 
                     val inputStream = app.contentResolver.openInputStream(dbUri) ?: return@launch
-                    val outputStream = app.getDatabasePath(PageDatabase.DATABASE_NAME).outputStream()
+                    val outputStream = app.getDatabasePath(PageUtil.DATABASE_NAME).outputStream()
 
                     inputStream.copyTo(outputStream)
                     inputStream.close()

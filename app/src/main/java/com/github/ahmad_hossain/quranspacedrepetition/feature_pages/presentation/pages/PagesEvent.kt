@@ -1,6 +1,6 @@
 package com.github.ahmad_hossain.quranspacedrepetition.feature_pages.presentation.pages
 
-import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.model.Page
+import comgithubahmadhossainquranspacedrepetition.Page
 
 sealed class PagesEvent {
     data class PageClicked(val page: Page) : PagesEvent()

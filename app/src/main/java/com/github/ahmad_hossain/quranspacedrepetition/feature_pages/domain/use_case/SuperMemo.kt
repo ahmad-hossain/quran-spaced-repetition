@@ -1,6 +1,7 @@
 package com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.use_case
 
-import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.model.Page
+import comgithubahmadhossainquranspacedrepetition.Page
+
 import javax.inject.Inject
 import kotlin.math.roundToInt
 

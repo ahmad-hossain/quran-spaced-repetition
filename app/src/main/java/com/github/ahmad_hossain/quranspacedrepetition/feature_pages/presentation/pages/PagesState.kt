@@ -1,7 +1,7 @@
 package com.github.ahmad_hossain.quranspacedrepetition.feature_pages.presentation.pages
 
-import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.model.Page
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.presentation.settings.UiText
+import comgithubahmadhossainquranspacedrepetition.Page
 
 data class PagesState(
     val displayedPages: List<Page> = emptyList(),
