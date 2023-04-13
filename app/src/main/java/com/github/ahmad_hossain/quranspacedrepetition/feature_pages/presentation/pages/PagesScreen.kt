@@ -169,7 +169,7 @@ fun PagesScreen(
                         if (state.displayedPages.isNotEmpty())
                             TableHeader()
                     }
-                    items(state.displayedPages) { page ->
+                    items(state.displayedPages, key = { it.pageNumber }) { page ->
                         val shouldGradePage = page.dueDate == null || page.dueDate.toEpochDay() <= LocalDate.now().toEpochDay()
                         PageItem(
                             modifier =
