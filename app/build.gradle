@@ -10,7 +10,7 @@ plugins {
 
 def versionMajor = 1
 def versionMinor = 0
-def versionPatch = 2
+def versionPatch = 3
 
 android {
     namespace 'com.github.ahmad_hossain.quranspacedrepetition'
