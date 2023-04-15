@@ -159,24 +159,22 @@ fun PagesScreen(
             )
             if (state.displayedPages.isEmpty())
                 NoPagesDueMessage()
-            key(state.selectedTab) {
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = BottomBarHeight + FabHeight + ScaffoldFabSpacing * 2),
-                    state = lazyListState
-                ) {
-                    stickyHeader {
-                        if (state.displayedPages.isNotEmpty())
-                            TableHeader()
-                    }
-                    items(state.displayedPages, key = { it.pageNumber }) { page ->
-                        val shouldGradePage = page.dueDate == null || page.dueDate.toEpochDay() <= LocalDate.now().toEpochDay()
-                        PageItem(
-                            modifier =
-                            if (shouldGradePage) Modifier.clickable { viewModel.onEvent(PagesEvent.PageClicked(page)) } else Modifier.alpha(0.38f),
-                            page = page
-                        )
-                    }
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(bottom = BottomBarHeight + FabHeight + ScaffoldFabSpacing * 2),
+                state = lazyListState
+            ) {
+                stickyHeader {
+                    if (state.displayedPages.isNotEmpty())
+                        TableHeader()
+                }
+                items(state.displayedPages, key = { it.pageNumber }) { page ->
+                    val shouldGradePage = page.dueDate == null || page.dueDate.toEpochDay() <= LocalDate.now().toEpochDay()
+                    PageItem(
+                        modifier =
+                        if (shouldGradePage) Modifier.clickable { viewModel.onEvent(PagesEvent.PageClicked(page)) } else Modifier.alpha(0.38f),
+                        page = page
+                    )
                 }
             }
         }
