@@ -1,11 +1,8 @@
 package com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.use_case
 
-import android.Manifest
 import android.app.AlarmManager
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.ahmad_hossain.quranspacedrepetition.R
@@ -58,13 +55,9 @@ class UpdateReminderNotification @Inject constructor(
     }
 
     private fun sendNotification() {
-        val notificationPermissionGranted = ActivityCompat
-            .checkSelfPermission(
-                context,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-        Timber.d("sendNotification: notificationPermissionGranted=$notificationPermissionGranted")
-        if (notificationPermissionGranted) {
+        val canSendNotification = notificationManager.areNotificationsEnabled()
+        Timber.d("sendNotification: notificationPermissionGranted=$canSendNotification")
+        if (canSendNotification) {
             notificationManager.notify(
                 REMINDER_NOTIFICATION_ID,
                 reminderNotificationBuilder.build()
