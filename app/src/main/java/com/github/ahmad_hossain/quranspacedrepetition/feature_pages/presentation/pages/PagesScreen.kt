@@ -171,8 +171,9 @@ fun PagesScreen(
                 items(state.displayedPages, key = { it.pageNumber }) { page ->
                     val shouldGradePage = page.dueDate == null || page.dueDate.toEpochDay() <= LocalDate.now().toEpochDay()
                     PageItem(
-                        modifier =
-                        if (shouldGradePage) Modifier.clickable { viewModel.onEvent(PagesEvent.PageClicked(page)) } else Modifier.alpha(0.38f),
+                        modifier = Modifier
+                            .alpha(if (shouldGradePage) 1f else 0.38f)
+                            .clickable { viewModel.onEvent(PagesEvent.PageClicked(page)) },
                         page = page
                     )
                 }
