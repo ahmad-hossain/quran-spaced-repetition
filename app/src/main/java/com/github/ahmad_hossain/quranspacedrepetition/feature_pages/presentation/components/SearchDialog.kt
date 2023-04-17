@@ -21,6 +21,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.window.DialogProperties
 import com.github.ahmad_hossain.quranspacedrepetition.R
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.presentation.settings.UiText
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -57,6 +58,7 @@ fun SearchDialog(
             val focusRequester = remember { FocusRequester() }
             val keyboardController = LocalSoftwareKeyboardController.current
             LaunchedEffect(Unit) {
+                delay(100)
                 focusRequester.requestFocus()
             }
             val context = LocalContext.current
