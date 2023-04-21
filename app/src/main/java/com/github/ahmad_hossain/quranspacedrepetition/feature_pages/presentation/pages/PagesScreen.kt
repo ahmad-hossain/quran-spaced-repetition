@@ -173,7 +173,7 @@ fun PagesScreen(
                     PageItem(
                         modifier = Modifier
                             .alpha(if (shouldGradePage) 1f else 0.38f)
-                            .clickable { viewModel.onEvent(PagesEvent.PageClicked(page)) },
+                            .let { if (shouldGradePage) it.clickable { viewModel.onEvent(PagesEvent.PageClicked(page)) } else it },
                         page = page
                     )
                 }
