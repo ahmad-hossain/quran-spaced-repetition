@@ -110,14 +110,14 @@ This screen allows you to configure various settings for the app.
    Grades are divided into 2 categories, and are as follows:
 
    **REMEMBERING** \
-   5: **Great**, excellent response \
-   4: **Good**, correct response provided with some hesitation \
-   3: **Pass**, answer recalled with difficulty; perhaps, slightly incorrect
+   😎: **Great**, excellent response \
+   🙂: **Good**, correct response provided with some hesitation \
+   ☹️: **Pass**, answer recalled with difficulty; perhaps, slightly incorrect
 
    **FORGETTING** \
-   2: **Fail**, wrong response that makes you say *I knew it!* \
-   1: **Bad**, wrong response; the correct answer seems to be familiar \
-   0: **Null**, complete blackout; you do not even recall ever knowing the answer. If you follow the
+   😢: **Fail**, wrong response that makes you say *I knew it!* \
+   😭: **Bad**, wrong response; the correct answer seems to be familiar \
+   💀: **Null**, complete blackout; you do not even recall ever knowing the answer. If you follow the
    review schedule that the app provides, you should rarely or never need this grade.
 
    **NOTE**: Ensure you understand the difference between **Pass** and **Fail**!
