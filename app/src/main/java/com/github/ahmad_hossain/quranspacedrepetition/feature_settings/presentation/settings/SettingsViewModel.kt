@@ -12,6 +12,7 @@ import app.cash.sqldelight.db.SqlDriver
 import com.github.ahmad_hossain.quranspacedrepetition.BuildConfig
 import com.github.ahmad_hossain.quranspacedrepetition.R
 import com.github.ahmad_hossain.quranspacedrepetition.common.use_case.ScheduleNotificationAlarm
+import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.repository.PageRepository
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.util.PageUtil
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.repository.SettingsRepository
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.use_case.ChangePageRange
@@ -33,6 +34,7 @@ class SettingsViewModel @Inject constructor(
     private val validSqlLiteDbUseCase: ValidSqlLiteDb,
     private val driver: SqlDriver,
     private val changePageRangeUseCase: ChangePageRange,
+    private val pageRepository: PageRepository,
 ) : ViewModel() {
 
     var state by mutableStateOf(SettingsState())
@@ -134,10 +136,7 @@ class SettingsViewModel @Inject constructor(
                 }
 
                 viewModelScope.launch(Dispatchers.IO) {
-                    // TODO checkpoint not working programatically; export only working after initial restart
-//                    pageRepository.checkpoint() // does not do anything
-//                    driver.close() // works but database is closed so need to restart app
-//                    pageRepository.setJournalMode("DELETE") // did nothing
+                    pageRepository.checkpoint()
 
                     val inputStream = app.getDatabasePath(PageUtil.DATABASE_NAME).inputStream()
                     val outputStream = app.contentResolver.openOutputStream(userChosenUri) ?: return@launch

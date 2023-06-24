@@ -2,6 +2,7 @@ package com.github.ahmad_hossain.quranspacedrepetition.feature_pages.data.reposi
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
+import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import com.github.ahmad_hossain.quranspacedrepetition.PageDatabase
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.repository.PageRepository
@@ -53,7 +54,7 @@ class PageRepositoryImpl(
         driver.executeQuery(
             identifier = null,
             sql = "PRAGMA wal_checkpoint(full)",
-            mapper = {},
+            mapper = SqlCursor::next,
             parameters = 0,
         )
     }
