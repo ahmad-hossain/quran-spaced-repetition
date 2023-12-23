@@ -51,4 +51,5 @@
     <string name="schedule_alarms">Schedule Alarms</string>
     <string name="alarm_permission_dialog_text">needs the Alarm permission to schedule the daily review reminder notification</string>
     <string name="go_to_settings">Go to Settings</string>
+    <string name="num_pages_due">%d pages due</string>
 </resources>

@@ -117,7 +117,19 @@ fun PagesScreen(
         topBar = {
             val containerColor = if (isListScrolled) MaterialTheme.colorScheme.surfaceColorAtElevation(3.dp) else MaterialTheme.colorScheme.surface
             CenterAlignedTopAppBar(
-                title = { Text(stringResource(R.string.revision)) },
+                title = {
+                    Column {
+                        Text(stringResource(R.string.revision))
+                        val memorizedPages = state.displayedPages.count { it.dueDate != null }
+                        val totalPagesCount = state.allPages.size
+                        val pct = if (totalPagesCount == 0) 0 else ((memorizedPages / totalPagesCount.toDouble()) * 100).toInt()
+                        val subtitleText = when (state.selectedTab) {
+                            UiTabs.TODAY -> stringResource(id = R.string.num_pages_due, state.displayedPages.size)
+                            UiTabs.ALL -> "$memorizedPages/$totalPagesCount ($pct%)"
+                        }
+                        Text(subtitleText, style = MaterialTheme.typography.titleSmall)
+                    }
+                },
                 scrollBehavior = scrollBehavior,
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = containerColor,
