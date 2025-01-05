@@ -141,6 +141,7 @@ fun PagesScreen(
             CustomBottomBar(
                 modifier = Modifier.offset { IntOffset(x = 0, y = -bottomBarOffsetHeightPx.value.roundToInt()) },
                 currentScreen = Screen.Home,
+                onHomeClicked = { viewModel.onEvent(PagesEvent.HomeClicked) },
                 onSettingsClicked = { navigator.navigate(SettingsScreenDestination) },
             )
         },

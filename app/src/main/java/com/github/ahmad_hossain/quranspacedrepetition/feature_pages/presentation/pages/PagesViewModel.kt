@@ -106,6 +106,13 @@ class PagesViewModel @Inject constructor(
                 }
                 state = state.copy(searchQuery = event.query, searchQueryError = searchQueryError)
             }
+            is HomeClicked -> {
+                viewModelScope.launch { _uiEvent.emit(UiEvent.ExpandTopAndBottomBars) }
+                state = state.copy(
+                    selectedTab = UiTabs.TODAY,
+                    displayedPages = state.pagesDueToday
+                )
+            }
         }
     }
 

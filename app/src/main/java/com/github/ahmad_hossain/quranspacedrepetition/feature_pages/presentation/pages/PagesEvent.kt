@@ -13,4 +13,5 @@ sealed class PagesEvent {
     data class SearchQueryChanged(val query: String) : PagesEvent()
     data class NumberPickerValueChanged(val newValue: Int) : PagesEvent()
     data class GradeSelected(val grade: Int) : PagesEvent()
+    object HomeClicked : PagesEvent()
 }
