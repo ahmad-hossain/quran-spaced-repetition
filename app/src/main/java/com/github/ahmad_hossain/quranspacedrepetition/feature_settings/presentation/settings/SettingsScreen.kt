@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Mail
 import androidx.compose.material.icons.filled.Upload
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -133,6 +134,13 @@ fun SettingsScreen(
                 leadingContent = { Icon(Icons.Default.Download, contentDescription = null) },
                 headlineText = { Text(stringResource(R.string.headline_import_data)) },
                 supportingText = { Text(stringResource(R.string.supporting_import_data)) },
+            )
+            Divider()
+            SettingsSectionHeadline(text = "Contact")
+            ListItem(
+                modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.ContactClicked) },
+                leadingContent = { Icon(Icons.Default.Mail, contentDescription = null) },
+                headlineText = { Text(stringResource(R.string.contact_developer)) },
             )
         }
     }

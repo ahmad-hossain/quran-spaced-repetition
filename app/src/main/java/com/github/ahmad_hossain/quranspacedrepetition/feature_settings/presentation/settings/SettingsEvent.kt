@@ -16,4 +16,5 @@ sealed class SettingsEvent {
     object ImportDataClicked : SettingsEvent()
     data class OnCreateDocumentActivityResult(val result: ActivityResult) : SettingsEvent()
     data class OnOpenDocumentActivityResult(val result: ActivityResult) : SettingsEvent()
+    data object ContactClicked : SettingsEvent()
 }

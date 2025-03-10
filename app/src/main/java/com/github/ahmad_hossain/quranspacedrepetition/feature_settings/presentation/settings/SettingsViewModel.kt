@@ -15,6 +15,7 @@ import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.data.data_so
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.repository.PageRepository
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.repository.SettingsRepository
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.use_case.ChangePageRange
+import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.use_case.OpenEmailWithDeveloper
 import com.github.ahmad_hossain.quranspacedrepetition.feature_settings.domain.use_case.ValidSqlLiteDb
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -34,6 +35,7 @@ class SettingsViewModel @Inject constructor(
     private val db: PageDatabase,
     private val pageRepository: PageRepository,
     private val changePageRangeUseCase: ChangePageRange,
+    private val openEmailWithDeveloperUseCase: OpenEmailWithDeveloper,
 ) : ViewModel() {
 
     var state by mutableStateOf(SettingsState())
@@ -174,6 +176,8 @@ class SettingsViewModel @Inject constructor(
                     exitProcess(0)
                 }
             }
+
+            SettingsEvent.ContactClicked -> openEmailWithDeveloperUseCase.execute()
         }
     }
 
