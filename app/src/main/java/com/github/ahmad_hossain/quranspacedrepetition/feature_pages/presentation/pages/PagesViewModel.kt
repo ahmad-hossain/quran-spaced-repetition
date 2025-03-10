@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.ahmad_hossain.quranspacedrepetition.R
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.model.Page
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.repository.PageRepository
+import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.use_case.OpenPageInQuranApp
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.use_case.SuperMemo
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.use_case.UpdateReminderNotification
 import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.presentation.pages.PagesEvent.*
@@ -27,6 +28,7 @@ import javax.inject.Inject
 class PagesViewModel @Inject constructor(
     private val repository: PageRepository,
     private val superMemoUseCase: SuperMemo,
+    private val openPageInQuranAppUseCase: OpenPageInQuranApp,
     private val updateReminderNotificationUseCase: UpdateReminderNotification,
 ) : ViewModel() {
 
@@ -112,6 +114,9 @@ class PagesViewModel @Inject constructor(
                     selectedTab = UiTabs.TODAY,
                     displayedPages = state.pagesDueToday
                 )
+            }
+            is PageLongClicked -> {
+                openPageInQuranAppUseCase.execute(pageNumber = event.pageNumber)
             }
         }
     }

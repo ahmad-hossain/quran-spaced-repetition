@@ -4,6 +4,7 @@ import com.github.ahmad_hossain.quranspacedrepetition.feature_pages.domain.model
 
 sealed class PagesEvent {
     data class PageClicked(val page: Page) : PagesEvent()
+    data class PageLongClicked(val pageNumber: Int) : PagesEvent()
     data class TabClicked(val tab: UiTabs) : PagesEvent()
     object GradeDialogConfirmed : PagesEvent()
     object GradeDialogDismissed : PagesEvent()
