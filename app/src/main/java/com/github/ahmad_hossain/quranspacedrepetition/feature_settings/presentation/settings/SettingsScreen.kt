@@ -121,7 +121,7 @@ fun SettingsScreen(
                     DateTimeFormatter.ofPattern("hh:mm a"))) }
             )
             Divider()
-            SettingsSectionHeadline(text = "Backup")
+            SettingsSectionHeadline(text = stringResource(R.string.backup))
             ListItem(
                 modifier = Modifier.clickable { viewModel.onEvent(SettingsEvent.ExportDataClicked) },
                 leadingContent = { Icon(Icons.Default.Upload, contentDescription = null) },
